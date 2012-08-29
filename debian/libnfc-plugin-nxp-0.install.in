@@ -1,0 +1,5 @@
+@PREFIX@/lib/*.so
+/lib/libpn544_fw.so
+#@PREFIX@/bin/*
+#@PREFIX@/share/dbus-1/services/*
+
