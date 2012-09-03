@@ -103,8 +103,6 @@ extern char phOsalNfc_DbgTraceBuffer[];
 
 #define NXP_FW_MIN_TX_RX_LEN     0x0AU
 
-#define NFC_TIMER_CONTEXT
-
 
 #if defined( NXP_FW_MAX_TX_RX_LEN ) && \
      ( NXP_FW_MAX_TX_RX_LEN > NXP_FW_MIN_TX_RX_LEN )
@@ -526,7 +524,7 @@ typedef struct phDnldNfc_sContext
 	  * to compare the written data */
     phNfc_sData_t               dnld_store;
 
-    /** \internal Previously downloaded trimmed data stored
+    /** \internal Previously downloaded trimmed data stored  
 	  * to compare the written data */
     phNfc_sData_t               trim_store;
 
@@ -804,16 +802,16 @@ phDnldNfc_ComputeCrc16(
 #define CRC32_POLYNOMIAL     0xEDB88320L
 
 static uint32_t CRC32Table[0x100];
-
+ 
 void BuildCRCTable()
 {
     unsigned long crc;
     uint8_t i = 0, j = 0;
-
-    for ( i = 0; i <= 0xFF ; i++ )
+ 
+    for ( i = 0; i <= 0xFF ; i++ ) 
     {
         crc = i;
-        for ( j = 8 ; j> 0; j-- )
+        for ( j = 8 ; j> 0; j-- ) 
         {
             if ( crc & 1 )
             {
@@ -833,13 +831,13 @@ void BuildCRCTable()
 * table lookup method. It accepts an original value for the crc,
 * and returns the updated value.
 */
-
+ 
 uint32_t CalculateCRC32( void *buffer , uint32_t count, uint32_t crc )
 {
     uint8_t *p;
     uint32_t temp1;
     uint32_t temp2;
-
+ 
     p = (uint8_t *) buffer;
     while ( count-- != 0 ) {
         temp1 = ( crc>> 8 ) & 0x00FFFFFFL;
@@ -1432,7 +1430,7 @@ phDnldNfc_Process_Write(
                                  ,psDnldContext->dnld_store.length);
                 p_sec_info->section_read = FALSE;
                 p_sec_info->section_write = FALSE;
-                DNLD_DEBUG(" FW_DNLD: %X Bytes Write Complete ",
+                DNLD_DEBUG(" FW_DNLD: %X Bytes Write Complete ", 
                                     psDnldContext->dnld_store.length);
                 DNLD_DEBUG(" Comparison Status %X\n", cmp_val);
             }
@@ -1529,7 +1527,7 @@ phDnldNfc_Process_Write(
 
 /*
 if(bit 0 of 0x813D is equal to 1) then
-
+   
    Do not overwrite 0x9931 / 0x9981 during download
 
 else
@@ -1537,25 +1535,25 @@ else
    @0x9931 = 0x79 // card Mode
    @0x9981 = 0x79 // Reader Mode
 */
-                trim_addr = p_sec_info->p_sec_hdr->section_address
+                trim_addr = p_sec_info->p_sec_hdr->section_address 
                                     + p_sec_info->p_trim_data[i+1];
                 if (NXP_FW_VMID_TRIM_CHK_ADDR == trim_addr)
                 {
-                    psDnldContext->vmid_trim_update =
+                    psDnldContext->vmid_trim_update = 
                             p_sm_trim_data[p_sec_info->p_trim_data[i+1]] ;
                 }
 
-                if((NXP_FW_VMID_CARD_MODE_ADDR == trim_addr)
+                if((NXP_FW_VMID_CARD_MODE_ADDR == trim_addr) 
                         || (NXP_FW_VMID_RD_MODE_ADDR == trim_addr))
                 {
-                    if (TRUE == psDnldContext->vmid_trim_update)
+                    if (TRUE == psDnldContext->vmid_trim_update) 
                     {
                         dnld_data->data_packet[p_sec_info->p_trim_data[i+1]] =
                                 p_sm_trim_data[p_sec_info->p_trim_data[i+1]] ;
                     }
                 }
                 else
-
+                     
 #endif
                 {
                     dnld_data->data_packet[p_sec_info->p_trim_data[i+1]] =
@@ -2303,7 +2301,7 @@ phDnldNfc_Raw_Write(
             {
                 if(TRUE != skip_frame)
 	        {
-                   psDnldContext->raw_mode_upgrade =
+                   psDnldContext->raw_mode_upgrade = 
                        (psDnldContext->raw_mode_upgrade &
                               ~(frame_type & ~PHDNLD_MARKER_MASK));
 		}
@@ -2494,9 +2492,9 @@ phDnldNfc_Resume(
 #if  (NXP_FW_INTEGRITY_CHK >= 0x01)
             uint8_t verify_crc = 0x96;
 
-            if ( (NULL != psDnldContext->p_flash_code_crc)
-                  && (NULL != psDnldContext->p_patch_code_crc)
-                   && (NULL != psDnldContext->p_patch_table_crc)
+            if ( (NULL != psDnldContext->p_flash_code_crc) 
+                  && (NULL != psDnldContext->p_patch_code_crc) 
+                   && (NULL != psDnldContext->p_patch_table_crc) 
                   )
             {
                 uint8_t     crc_i = 0;
@@ -2519,11 +2517,11 @@ phDnldNfc_Resume(
                         | psDnldContext->chk_integrity_crc.patch_code.Chk_Crc32[crc_i]
                                 << (crc_i * BYTE_SIZE)  ;
                 }
-                verify_crc =(uint8_t)( (*((uint32_t *) psDnldContext->p_flash_code_crc)) !=
+                verify_crc =(uint8_t)( (*((uint32_t *) psDnldContext->p_flash_code_crc)) != 
                           flash_code_crc );
-                verify_crc |=(uint8_t)( (*((uint32_t *) psDnldContext->p_patch_code_crc)) !=
+                verify_crc |=(uint8_t)( (*((uint32_t *) psDnldContext->p_patch_code_crc)) != 
                           patch_code_crc );
-                verify_crc |=(uint8_t)( (*((uint16_t *) psDnldContext->p_patch_table_crc)) !=
+                verify_crc |=(uint8_t)( (*((uint16_t *) psDnldContext->p_patch_table_crc)) != 
                           patch_table_crc );
             }
             else
@@ -2534,12 +2532,12 @@ phDnldNfc_Resume(
 
 #endif /* #if  (NXP_FW_INTEGRITY_CHK >= 0x01) */
 
-            integrity_chk = psDnldContext->chk_integrity_crc.config_page.Chk_status +
+            integrity_chk = psDnldContext->chk_integrity_crc.config_page.Chk_status + 
                         psDnldContext->chk_integrity_crc.patch_table.Chk_status +
                         psDnldContext->chk_integrity_crc.flash_code.Chk_status +
                         psDnldContext->chk_integrity_crc.patch_code.Chk_status;
 
-            if ( ( 0 != integrity_chk )
+            if ( ( 0 != integrity_chk ) 
 #if  (NXP_FW_INTEGRITY_CHK >= 0x01)
                 || ( 0 != verify_crc )
 #endif /* #if  (NXP_FW_INTEGRITY_CHK >= 0x01) */
@@ -2681,7 +2679,7 @@ phDnldNfc_Receive_Complete (
             /* Handle the Error Scenario */
             status = PHNFCSTVAL( CID_NFC_DNLD,  NFCSTATUS_FAILED );
         }
-        else if ((0 == length)
+        else if ((0 == length) 
             || (PHDNLD_MIN_PACKET > length ))
         {
             DNLD_DEBUG(" Receive Response Length = %u .... \n",length);
@@ -2746,39 +2744,39 @@ phDnldNfc_Receive_Complete (
 							       == psDnldContext->raw_mode_upgrade)
 							{
 #if  (NXP_FW_INTEGRITY_CHK >= 0x01)
-                            phDnldNfc_sChkCrcComplete_t *p_dnld_crc_all =
+                            phDnldNfc_sChkCrcComplete_t *p_dnld_crc_all = 
                                 &psDnldContext->chk_integrity_crc;
                             switch(psDnldContext->chk_integrity_param)
                             {
                                 case CHK_INTEGRITY_CONFIG_PAGE_CRC:
                                 {
-                                    (void)memcpy(&p_dnld_crc_all->config_page,
-                                                (((uint8_t *)pdata) + PHDNLD_MIN_PACKET), resp_length);
+                                    (void)memcpy(&p_dnld_crc_all->config_page,  
+                                                (((uint8_t *)pdata) + PHDNLD_MIN_PACKET), resp_length); 
                                     break;
                                 }
                                 case CHK_INTEGRITY_PATCH_TABLE_CRC:
                                 {
-                                    (void)memcpy(&p_dnld_crc_all->patch_table,
-                                                (((uint8_t *)pdata) + PHDNLD_MIN_PACKET), resp_length);
+                                    (void)memcpy(&p_dnld_crc_all->patch_table,  
+                                                (((uint8_t *)pdata) + PHDNLD_MIN_PACKET), resp_length); 
                                     break;
                                 }
                                 case CHK_INTEGRITY_FLASH_CODE_CRC:
                                 {
-                                    (void)memcpy(&p_dnld_crc_all->flash_code,
-                                                (((uint8_t *)pdata) + PHDNLD_MIN_PACKET), resp_length);
+                                    (void)memcpy(&p_dnld_crc_all->flash_code,  
+                                                (((uint8_t *)pdata) + PHDNLD_MIN_PACKET), resp_length); 
                                     break;
                                 }
                                 case CHK_INTEGRITY_PATCH_CODE_CRC:
                                 {
-                                    (void)memcpy(&p_dnld_crc_all->patch_code,
-                                                (((uint8_t *)pdata) + PHDNLD_MIN_PACKET), resp_length);
+                                    (void)memcpy(&p_dnld_crc_all->patch_code,  
+                                                (((uint8_t *)pdata) + PHDNLD_MIN_PACKET), resp_length); 
                                     break;
                                 }
                                 case CHK_INTEGRITY_COMPLETE_CRC:
                                 {
                                     (void)memcpy(p_dnld_crc_all,
-                                            (((uint8_t *)pdata) + PHDNLD_MIN_PACKET), resp_length);
-                                    DNLD_DEBUG(" FW_DNLD: Check Integrity Complete Structure Size  = %X \n",
+                                            (((uint8_t *)pdata) + PHDNLD_MIN_PACKET), resp_length); 
+                                    DNLD_DEBUG(" FW_DNLD: Check Integrity Complete Structure Size  = %X \n", 
                                                     sizeof(psDnldContext->chk_integrity_crc));
                                     break;
                                 }
@@ -3275,7 +3273,7 @@ phDnldNfc_Send_Command(
 #if  (NXP_FW_INTEGRITY_CHK >= 0x01)
             if ((NULL != params) && ( param_length > 0 ))
             {
-                psDnldContext->chk_integrity_param =
+                psDnldContext->chk_integrity_param = 
                             (phDnldNfc_eChkCrc_t)(*(uint8_t *)params);
                 tx_length = param_length;
             }
@@ -3291,21 +3289,21 @@ phDnldNfc_Send_Command(
                 case CHK_INTEGRITY_CONFIG_PAGE_CRC:
                 case CHK_INTEGRITY_PATCH_TABLE_CRC:
                 {
-                    psDnldContext->resp_length = PHDNLD_MIN_PACKET
+                    psDnldContext->resp_length = PHDNLD_MIN_PACKET 
                                          + CHECK_INTEGRITY_RESP_CRC16_LEN;
                     break;
                 }
                 case CHK_INTEGRITY_FLASH_CODE_CRC:
                 case CHK_INTEGRITY_PATCH_CODE_CRC:
                 {
-                    psDnldContext->resp_length = PHDNLD_MIN_PACKET
+                    psDnldContext->resp_length = PHDNLD_MIN_PACKET 
                                         +  CHECK_INTEGRITY_RESP_CRC32_LEN;
                     break;
                 }
                 case CHK_INTEGRITY_COMPLETE_CRC:
                 default:
                 {
-                    psDnldContext->resp_length = PHDNLD_MIN_PACKET
+                    psDnldContext->resp_length = PHDNLD_MIN_PACKET 
                                         +  CHECK_INTEGRITY_RESP_COMP_LEN;
                     break;
                 }
@@ -3363,7 +3361,7 @@ phDnldNfc_Check_FW(
             DNLD_PRINT(" FW_DNLD_CHK: Forceful Upgrade of the Firmware .... Required \n");
             status = NFCSTATUS_SUCCESS;
         }
-        else    if ( (pHwRef->device_info.fw_version >> (BYTE_SIZE * 2))
+        else    if ( (pHwRef->device_info.fw_version >> (BYTE_SIZE * 2)) 
                 != ( cur_fw_hdr->fw_version >> (BYTE_SIZE * 2) ))
         {
             /* Check for the Compatible Romlib Version for the Hardware */
@@ -3552,24 +3550,24 @@ phDnldNfc_Process_FW(
                {
                    case DNLD_FW_CODE_ADDR:
                    {
-                       psDnldContext->p_flash_code_crc =
-                           p_cur_sec->p_sec_data
+                       psDnldContext->p_flash_code_crc = 
+                           p_cur_sec->p_sec_data 
                              + p_cur_sec->p_sec_hdr->section_length
                                 - DNLD_CRC32_SIZE;
                        break;
                    }
                    case DNLD_PATCH_CODE_ADDR:
                    {
-                       psDnldContext->p_patch_code_crc =
-                           p_cur_sec->p_sec_data
+                       psDnldContext->p_patch_code_crc = 
+                           p_cur_sec->p_sec_data 
                              + p_cur_sec->p_sec_hdr->section_length
                                 - DNLD_CRC32_SIZE;
                        break;
                    }
                    case DNLD_PATCH_TABLE_ADDR:
                    {
-                       psDnldContext->p_patch_table_crc =
-                           p_cur_sec->p_sec_data
+                       psDnldContext->p_patch_table_crc = 
+                           p_cur_sec->p_sec_data 
                              + p_cur_sec->p_sec_hdr->section_length
                                 - DNLD_CRC16_SIZE;
                        break;
@@ -3783,7 +3781,7 @@ phDnldNfc_Upgrade (
                     {
                         DNLD_PRINT("\n FW_DNLD: Initial Reset .... \n");
 
-#if defined(FW_DOWNLOAD_TIMER)
+#if defined(FW_DOWNLOAD_TIMER) 
 
                         psDnldContext->timer_id = phOsalNfc_Timer_Create( );
 
@@ -3805,8 +3803,8 @@ phDnldNfc_Upgrade (
                 else if (NFCSTATUS_SUCCESS == PHNFCSTATUS(status))
                 {
 #if  defined (NXP_FW_INTEGRITY_VERIFY)
-                    /*
-                     * To check for the integrity if the firmware is already
+                    /* 
+                     * To check for the integrity if the firmware is already 
                      * Upgraded.
                      */
                     status = phDnldNfc_Send_Command( psDnldContext, pHwRef,
@@ -3815,13 +3813,13 @@ phDnldNfc_Upgrade (
                     {
                         DNLD_PRINT("\n FW_DNLD: Integrity Reset .... \n");
                         (void)phDnldNfc_Set_Seq(psDnldContext, DNLD_SEQ_COMPLETE);
-                        status = PHNFCSTVAL( CID_NFC_DNLD,
+                        status = PHNFCSTVAL( CID_NFC_DNLD, 
                                         NFCSTATUS_PENDING );
-#if defined(FW_DOWNLOAD_TIMER)
+#if defined(FW_DOWNLOAD_TIMER) 
                         psDnldContext->timer_id = phOsalNfc_Timer_Create( );
 #if (FW_DOWNLOAD_TIMER < 2)
                         phOsalNfc_Timer_Start( psDnldContext->timer_id,
-                                NXP_DNLD_COMPLETE_TIMEOUT,
+                                NXP_DNLD_COMPLETE_TIMEOUT, 
                                 (ppCallBck_t) phDnldNfc_Abort
 #ifdef NFC_TIMER_CONTEXT
                                 , (void *) psDnldContext

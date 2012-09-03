@@ -28,7 +28,7 @@
 * $Date: Mon Mar 29 17:34:47 2010 $                                           *
 * $Author: ing04880 $                                                         *
 * $Revision: 1.73 $                                                           *
-* $Aliases: NFC_FRI1.1_WK1007_R33_4,NFC_FRI1.1_WK1017_PREP1,NFC_FRI1.1_WK1017_R34_1,NFC_FRI1.1_WK1017_R34_2,NFC_FRI1.1_WK1023_R35_1 $
+* $Aliases: NFC_FRI1.1_WK1007_R33_4,NFC_FRI1.1_WK1017_PREP1,NFC_FRI1.1_WK1017_R34_1,NFC_FRI1.1_WK1017_R34_2,NFC_FRI1.1_WK1023_R35_1 $  
 *                                                                             *
 * =========================================================================== *
 */
@@ -93,12 +93,12 @@ extern char phOsalNfc_DbgTraceBuffer[];
 #include <phDbgTrace.h>
 #if defined(PHDBG_TRACES) && !defined(HCI_TRACE)
 #define HCI_PRINT( str )  PHDBG_INFO(str)
-#define HCI_DEBUG(str, arg)
-#define HCI_PRINT_BUFFER(msg,buf,len)
+#define HCI_DEBUG(str, arg) 
+#define HCI_PRINT_BUFFER(msg,buf,len)   
 #else
-#define HCI_PRINT( str )
+#define HCI_PRINT( str ) 
 #define HCI_DEBUG(...)
-#define HCI_PRINT_BUFFER(msg,buf,len)
+#define HCI_PRINT_BUFFER(msg,buf,len)   
 #endif  /* #if defined(PHDBG_TRACES) */
 /* #if defined(PHDBG_INFO) && defined (PHDBG_CRITICAL_ERROR) */
 
@@ -569,26 +569,26 @@ typedef struct phHciNfc_Pipe_Info{
     uint8_t                     recv_msg_type;
     /** \internal previous message sent to this pipe */
     uint8_t                     prev_msg;
-    /** \internal Index of the previous Set/Get Parameter command
+    /** \internal Index of the previous Set/Get Parameter command 
      *  sent to this pipe */
     uint8_t                     reg_index;
-    /** \internal length of Parameter of the Set/Get Parameter
+    /** \internal length of Parameter of the Set/Get Parameter 
      *  command sent to this pipe */
     uint16_t                    param_length;
-    /** \internal Parameter of the Set/Get Parameter command
+    /** \internal Parameter of the Set/Get Parameter command 
      *  sent to this pipe */
     void                        *param_info;
     /** \internal Pointer to a Pipe specific Receive Response function */
-    pphHciNfc_Pipe_Receive_t    recv_resp;
+    pphHciNfc_Pipe_Receive_t    recv_resp; 
     /** \internal Pointer to a Pipe specific Receive Event function */
-    pphHciNfc_Pipe_Receive_t    recv_event;
+    pphHciNfc_Pipe_Receive_t    recv_event; 
     /** \internal Pointer to a Pipe specific Receive Command function */
-    pphHciNfc_Pipe_Receive_t    recv_cmd;
+    pphHciNfc_Pipe_Receive_t    recv_cmd; 
 }phHciNfc_Pipe_Info_t;
 
 
 typedef struct phHciNfc_sContext{
-    /** \internal HCI Layer Pointer from the upper layer for
+    /** \internal HCI Layer Pointer from the upper layer for 
                         lower layer function registration */
     phNfcLayer_sCfg_t           *p_hci_layer;
     /** \internal Pointer to the upper layer context */
@@ -643,7 +643,7 @@ typedef struct phHciNfc_sContext{
     void                        *p_device_mgmt_info;
     /** \internal HCI RF Reader Gates Management Information */
     void                        *p_reader_mgmt_info;
-    /** \internal HCI Card Application Gates and Emulation
+    /** \internal HCI Card Application Gates and Emulation 
                   Information */
     void                        *p_emulation_mgmt_info;
     /** \internal HCI RF Reader A Gate Information */
@@ -664,7 +664,7 @@ typedef struct phHciNfc_sContext{
     /** \internal HCI ISO15693 Reader Gate Information */
     void                        *p_iso_15693_info;
 #endif
-
+    
 #ifdef ENABLE_P2P
     /** \internal HCI NFC-IP1 Peer to Peer Information */
     void                        *p_nfcip_info;
@@ -708,8 +708,8 @@ typedef struct phHciNfc_sContext{
     volatile uint16_t           rx_total;
     /** \internal Number of bytes received */
     volatile uint16_t           rx_recvd;
-    /** \internal Index of the received data in the
-    *   response packet
+    /** \internal Index of the received data in the 
+    *   response packet  
     */
 
     /** \internal Send HCP Chaining Information */
@@ -953,7 +953,7 @@ phHciNfc_Transceive_Notify(
  *                                      the Device Interface Link .
  *  \param[in]  type                    type of the notification to
  *                                      the upper HAL layer.
- *  \param[in]  pInfo                   completion information returned
+ *  \param[in]  pInfo                   completion information returned 
  *                                      to the Upper HAL Layer.
  *  NFCSTATUS_SUCCESS                   Notification successfully completed .
  *  NFCSTATUS_INVALID_PARAMETER         One or more of the supplied parameters
@@ -1006,7 +1006,7 @@ phHciNfc_Release_Notify(
 /**
  * \ingroup grp_hci_nfc
  *
- *  The phHciNfc_Send_Generic_Cmd function sends the HCI Generic Commands
+ *  The phHciNfc_Send_Generic_Cmd function sends the HCI Generic Commands 
  *  to the device.
  *
  *  \param[in]  psHciContext            psHciContext is the context of
@@ -1019,9 +1019,9 @@ phHciNfc_Release_Notify(
  *                                      particular pipe .
  *
  *  \retval NFCSTATUS_PENDING           HCI Generic Command send in progress .
- *  \retval
- *  NFCSTATUS_INSUFFICIENT_RESOURCES    The memory could not be allocated
- *                                      as required amount of memory
+ *  \retval 
+ *  NFCSTATUS_INSUFFICIENT_RESOURCES    The memory could not be allocated 
+ *                                      as required amount of memory 
  *                                      is not sufficient.
  *
  */
@@ -1038,7 +1038,7 @@ phHciNfc_Send_Generic_Cmd (
 /**
  * \ingroup grp_hci_nfc
  *
- *  The phHciNfc_Set_Param function configures the Gate specific register
+ *  The phHciNfc_Set_Param function configures the Gate specific register 
  *  with the provided value.
  *
  *  \param[in]  psHciContext            psHciContext is the context of
@@ -1046,15 +1046,15 @@ phHciNfc_Send_Generic_Cmd (
  *  \param[in]  pHwRef                  pHwRef is the Information of
  *                                      the Device Interface Link .
  *  \param[in]  p_pipe_info             Pointer to pipe specific information.
- *  \param[in]  reg_index               Index of the register to be
+ *  \param[in]  reg_index               Index of the register to be 
  *                                      configured .
- *  \param[in]  p_param                 Value to the configured in
+ *  \param[in]  p_param                 Value to the configured in 
  *                                      particular register.
  *  \param[in]  param_length            Length of the parameter provided
  *                                      for the configuration.
  *
  *  \retval NFCSTATUS_PENDING           HCI Set parameter in progress .
- *  \retval
+ *  \retval 
  *  NFCSTATUS_INVALID_HCI_INFORMATION   The Information like p_pipe_info,
  *                                      p_param or param_length is invalid
  *
@@ -1074,7 +1074,7 @@ phHciNfc_Set_Param (
 /**
  * \ingroup grp_hci_nfc
  *
- *  The phHciNfc_Send_HCP function sends the HCI Host Control Packet
+ *  The phHciNfc_Send_HCP function sends the HCI Host Control Packet 
  *  Frames to the device.
  *
  *  \param[in]  psHciContext            psHciContext is the context of
@@ -1101,14 +1101,14 @@ phHciNfc_Send_HCP (
 /**
  * \ingroup grp_hci_nfc
  *
- *  The phHciNfc_Build_HCPFrame function initially builds the HCP Packet Frame
+ *  The phHciNfc_Build_HCPFrame function initially builds the HCP Packet Frame 
  *  with the values passed in the arguments .
  *
  *  \param[in]  hcp_packet              hcp_packet is the frame packet structure
- *                                      in which the frame is populated with the
+ *                                      in which the frame is populated with the 
  *                                      appropriate fields.
- *  \param[in]  chainbit                chainbit specifies whether the following
- *                                      HCP frames are chained or the frame is a
+ *  \param[in]  chainbit                chainbit specifies whether the following 
+ *                                      HCP frames are chained or the frame is a 
  *                                      normal frame.
  *  \param[in]  pipe_id                 pipe_id of the pipe to which the frame has
  *                                      to be sent.
@@ -1133,13 +1133,13 @@ phHciNfc_Build_HCPFrame (
 /**
  * \ingroup grp_hci_nfc
  *
- *  The phHciNfc_Append_HCPFrame function Appends the HCP Packet Frame
+ *  The phHciNfc_Append_HCPFrame function Appends the HCP Packet Frame 
  *  with the values passed in the arguments .
  *
- *  \param[in]  hcp_data            hcp_data is the pointer to the HCP
+ *  \param[in]  hcp_data            hcp_data is the pointer to the HCP 
  *                                  payload to which the data is to be
  *                                  appended.
- *  \param[in]  hcp_index           hcp_index is the index from which
+ *  \param[in]  hcp_index           hcp_index is the index from which 
  *                                  the data source needs to be appended.
  *  \param[in]  src_data            src_data that is to be appended to the
  *                                  HCP packet.
@@ -1161,7 +1161,7 @@ void
 /**
  * \ingroup grp_hci_nfc
  *
- *  The phHciNfc_Allocate_Resource function allocates and initialises the
+ *  The phHciNfc_Allocate_Resource function allocates and initialises the 
  *  resource memory for the HCI layer.
  *
  *  \param[in] ppBuffer                 ppBuffer is the pointer to which the
@@ -1171,9 +1171,9 @@ void
  *
  *  \retval NFCSTATUS_SUCCESS           The Resource Memory was allocated
  *                                      successfully .
- *  \retval
- *  NFCSTATUS_INSUFFICIENT_RESOURCES    The memory could not be allocated
- *                                      as required amount of memory
+ *  \retval 
+ *  NFCSTATUS_INSUFFICIENT_RESOURCES    The memory could not be allocated 
+ *                                      as required amount of memory 
  *                                      is not suffient.
  *
  */
@@ -1187,7 +1187,7 @@ NFCSTATUS
 /**
  * \ingroup grp_hci_nfc
  *
- *  The phHciNfc_Release_Resources function releases all the resources
+ *  The phHciNfc_Release_Resources function releases all the resources 
  *  allocated in the HCI Layer.
  *
  *  \param[in]  psHciContext            psHciContext is the context of
@@ -1206,7 +1206,7 @@ extern
 /**
  * \ingroup grp_hci_nfc
  *
- *  The phHciNfc_Release_Lower function initiates the release of the
+ *  The phHciNfc_Release_Lower function initiates the release of the 
  *  lower layers.
  *
  *  \param[in]  psHciContext            psHciContext is the context of

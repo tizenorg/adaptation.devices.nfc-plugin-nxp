@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2010 NXP Semiconductors
+ * Copyright (C) 2012 Samsung Elevtronics Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1370,7 +1371,7 @@ phHciNfc_Recv_DevMgmt_Event(
             case NXP_EVT_INFO_MEM_VIOLATION:
             {
                 event_info.eventType = NFC_INFO_MEM_VIOLATION;
-                LOGW("Your NFC controller is kinda hosed, take it to npelly@ to fix");
+//                LOGW("Your NFC controller is kinda hosed, take it to npelly@ to fix");
                 break;
             }
             case NXP_EVT_INFO_TEMP_OVERHEAT:

@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010 NXP Semiconductors
- * Copyright (C) 2012 Samsung Elevtronics Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,7 +58,7 @@
 
 #ifdef PIGGY_BACK
 
-#define PH_LLCNFC_ACK_TO_VALUE              1000
+#define PH_LLCNFC_ACK_TO_VALUE              LINK_ACK_TIMEOUT
 
 #endif /* #ifdef PIGGY_BACK */
 
@@ -95,7 +94,7 @@
 * \retval NFCSTATUS_INVALID_PARAMETER       At least one parameter of the function is invalid.
 *
 */
-NFCSTATUS
+NFCSTATUS 
 phLlcNfc_TimerInit (
     phLlcNfc_Context_t  *psLlcCtxt
 );
@@ -113,7 +112,7 @@ phLlcNfc_TimerInit (
 * \retval NFCSTATUS_INVALID_PARAMETER       At least one parameter of the function is invalid.
 *
 */
-void
+void 
 phLlcNfc_TimerUnInit (
     phLlcNfc_Context_t  *psLlcCtxt
 );
@@ -127,7 +126,7 @@ phLlcNfc_TimerUnInit (
 *
 *
 */
-void
+void 
 phLlcNfc_CreateTimers (void);
 
 /**
@@ -145,9 +144,9 @@ phLlcNfc_CreateTimers (void);
 * \retval Others                            Errors related to OsalNfc.
 *
 */
-NFCSTATUS
+NFCSTATUS 
 phLlcNfc_StartTimers (
-    uint8_t             TimerType,
+    uint8_t             TimerType, 
     uint8_t             ns_value
 );
 
@@ -159,14 +158,14 @@ phLlcNfc_StartTimers (
 * \copydoc page_reg stop the timer type given by the user
 *
 * \param[in] TimerType              Timer type to start
-* \param[in] no_of_gaurd_to_del     Guard time-out count shall be decreased as and when
+* \param[in] no_of_gaurd_to_del     Guard time-out count shall be decreased as and when  
 *                                   frame is removed
 *
 *
 */
-void
+void 
 phLlcNfc_StopTimers (
-    uint8_t             TimerType,
+    uint8_t             TimerType, 
     uint8_t             no_of_guard_to_del
 );
 
@@ -181,7 +180,7 @@ phLlcNfc_StopTimers (
 *
 *
 */
-void
+void 
 phLlcNfc_StopAllTimers (void);
 
 
@@ -197,7 +196,7 @@ phLlcNfc_StopAllTimers (void);
 * \retval Others                            Errors related to OsalNfc.
 *
 */
-void
+void 
 phLlcNfc_DeleteTimer (void);
 
 #ifdef LLC_URSET_NO_DELAY
@@ -206,7 +205,7 @@ phLlcNfc_DeleteTimer (void);
 
 #else /* #ifdef LLC_URSET_NO_DELAY */
 
-void
+void 
 phLlcNfc_URSET_Delay_Notify (
 
     uint32_t            delay_id);

@@ -74,10 +74,10 @@ STATIC void phLibNfc_InitCb(void *pContext,NFCSTATUS status);
 /* Shutdown callback */
 STATIC void phLibNfc_ShutdownCb(void *pContext,NFCSTATUS status);
 
-/**Default notification handler registered with lower layer immediately after
+/**Default notification handler registered with lower layer immediately after 
    successful initialization*/
 STATIC void phLibNfc_DefaultHandler(
-                                void                        *context,
+                                void                        *context,                                 
                                 phHal_eNotificationType_t    type,
                                 phHal4Nfc_NotificationInfo_t info,
                                 NFCSTATUS                    status
@@ -92,7 +92,7 @@ NFCSTATUS phLibNfc_Mgt_ConfigureDriver (pphLibNfc_sConfig_t     psConfig,
     if(NULL != gpphLibContext)
     {
         return NFCSTATUS_ALREADY_INITIALISED;
-    }
+    }   
 
     return phDal4Nfc_Config(psConfig, ppDriverHandle);
 }
@@ -102,7 +102,7 @@ NFCSTATUS phLibNfc_Mgt_UnConfigureDriver (void *                 pDriverHandle)
     if(NULL != gpphLibContext)
     {
         return NFCSTATUS_ALREADY_INITIALISED;
-    }
+    }   
 
    return phDal4Nfc_ConfigRelease(pDriverHandle);
 }
@@ -179,7 +179,7 @@ NFCSTATUS phLibNfc_Mgt_Initialize(void                *pDriverHandle,
                                  pphLibNfc_RspCb_t    pInitCb,
                                  void                 *pContext)
 {
-     NFCSTATUS Status = NFCSTATUS_SUCCESS;
+     NFCSTATUS Status = NFCSTATUS_SUCCESS;     
      if((NULL == pDriverHandle)||(NULL == pInitCb))
      {
         Status = NFCSTATUS_INVALID_PARAMETER;
@@ -265,22 +265,22 @@ STATIC void phLibNfc_InitCb(void *pContext,NFCSTATUS status)
             gpphLibContext->sSeContext.eActivatedMode = phLibNfc_SE_ActModeDefault;
             sSecuredElementInfo[LIBNFC_SE_UICC_INDEX].eSE_CurrentState=phLibNfc_SE_Active;
             pLibContext->sSeContext.uUiccActivate=TRUE;
-        }
+        }		
         if(pLibContext->psHwReference->smx_connected==TRUE)
         {
             /* populate state of the secured element */
             gpphLibContext->sSeContext.eActivatedMode = phLibNfc_SE_ActModeDefault;
-            sSecuredElementInfo[LIBNFC_SE_SMARTMX_INDEX].eSE_CurrentState=phLibNfc_SE_Inactive;
+            sSecuredElementInfo[LIBNFC_SE_SMARTMX_INDEX].eSE_CurrentState=phLibNfc_SE_Inactive; 
             pLibContext->sSeContext.uSmxActivate =FALSE;
         }
 
         phLibNfc_UpdateCurState(status,pLibContext);
-        (void)phHal4Nfc_RegisterNotification(
+        (void)phHal4Nfc_RegisterNotification(                                            
                                 pLibContext->psHwReference,
                                 eRegisterDefault,
                                 phLibNfc_DefaultHandler,
                                 (void*)pLibContext
-                                );
+                                ); 
         /* call the upper layer register function */
         (*pClientCb)(pUpperLayerContext,status);
 
@@ -307,15 +307,15 @@ STATIC void phLibNfc_InitCb(void *pContext,NFCSTATUS status)
         phOsalNfc_FreeMemory(pLibContext);
         pLibContext= NULL;
         gpphLibContext = NULL;
-
+        
     }
     return;
 }
 
-/**Default notification handler registered with lower layer immediately after
+/**Default notification handler registered with lower layer immediately after 
    successful initialization*/
 STATIC void phLibNfc_DefaultHandler(
-                                void                        *context,
+                                void                        *context,                                 
                                 phHal_eNotificationType_t    type,
                                 phHal4Nfc_NotificationInfo_t info,
                                 NFCSTATUS                    status
@@ -400,7 +400,7 @@ NFCSTATUS phLibNfc_Mgt_DeInitialize(void *                      pDriverHandle,
           {
               Status =NFCSTATUS_FAILED;
           }
-        }
+        }       
     }
     return Status;
 }
@@ -431,7 +431,7 @@ STATIC void phLibNfc_ShutdownCb(void *pContext,NFCSTATUS status)
             phLibNfc_UpdateCurState(status,pLibContext);
 
             pLibContext->status.GenCb_pending_status=FALSE;
-
+            
             /* Allocate the Memory for the Transceive info */
             if(pClientCb!=NULL)
             {
@@ -459,11 +459,11 @@ STATIC void phLibNfc_ShutdownCb(void *pContext,NFCSTATUS status)
             }
             /*Free the memory allocated during NDEF read,write
               and NDEF formatting*/
-            phLibNfc_Ndef_DeInit();
+            phLibNfc_Ndef_DeInit();        
                 phOsalNfc_FreeMemory(pLibContext);
                 gpphLibContext=NULL;
                 pLibContext= NULL;
-
+       
         }
         else
         {
@@ -510,8 +510,8 @@ NFCSTATUS phLibNfc_Mgt_Reset(void  *pContext)
             == eLibNfcHalStateShutdown))
     {   /*Lib Nfc not initlized*/
         Status = NFCSTATUS_NOT_INITIALISED;
-    }
-    else if(NULL == pContext)
+    }  
+    else if(NULL == pContext) 
     {
         Status = NFCSTATUS_INVALID_PARAMETER;
     }
@@ -523,7 +523,7 @@ NFCSTATUS phLibNfc_Mgt_Reset(void  *pContext)
         Status = NFCSTATUS_SHUTDOWN;
     }
     else
-    {
+    {                     
         /*Reset all callback status*/
         (void) memset(&(gpphLibContext->RegNtfType),0,
                         sizeof(phLibNfc_Registry_Info_t));
@@ -586,7 +586,7 @@ NFCSTATUS phLibNfc_Mgt_Reset(void  *pContext)
             phOsalNfc_FreeMemory(gpphLibContext->ndef_cntx.ndef_fmt);
             gpphLibContext->ndef_cntx.ndef_fmt = NULL;
         }
-        if(NULL != pNdefRecord)
+        if(NULL != pNdefRecord) 
         {
             if(NULL != pNdefRecord->Id)
             {
@@ -608,7 +608,7 @@ NFCSTATUS phLibNfc_Mgt_Reset(void  *pContext)
         {
             phOsalNfc_FreeMemory(NdefInfo.pNdefRecord);
             NdefInfo.pNdefRecord = NULL;
-        }
+        }          
         if(NULL != gpphLibContext->phLib_NdefRecCntx.NdefCb)
         {
             phOsalNfc_FreeMemory(gpphLibContext->phLib_NdefRecCntx.NdefCb);
@@ -620,9 +620,9 @@ NFCSTATUS phLibNfc_Mgt_Reset(void  *pContext)
             gpphLibContext->phLib_NdefRecCntx.ndef_message.buffer = NULL;
         }
         /* No device is connected */
-        gpphLibContext->Connected_handle = 0x00;
+        gpphLibContext->Connected_handle = 0x00;       
         gpphLibContext->Prev_Connected_handle = 0x00;
-        gpphLibContext->ReleaseType = NFC_INVALID_RELEASE_TYPE;
+        gpphLibContext->ReleaseType = NFC_INVALID_RELEASE_TYPE;        
         gpphLibContext->eLibNfcCfgMode = NFC_DISCOVERY_STOP;
         /*Lib Nfc Stack is initilized and in idle state*/
         gpphLibContext->LibNfcState.cur_state = eLibNfcHalStateInitandIdle;
@@ -662,8 +662,8 @@ NFCSTATUS phLibNfc_Mgt_Reset(void  *pContext)
         gpphLibContext->sSeContext.sSeCallabackInfo.pSEsetModeCb = NULL;
         gpphLibContext->sSeContext.sSeCallabackInfo.pSEsetModeCtxt = NULL;
         /*No callback is pending*/
-        gpphLibContext->status.GenCb_pending_status = FALSE;
-
+        gpphLibContext->status.GenCb_pending_status = FALSE;        
+                    
     }
     return Status;
 }
@@ -755,7 +755,7 @@ phLibNfc_UpdateNextState(
     default:
         break;
     }
-    pLibContext->LibNfcState.next_state =
+    pLibContext->LibNfcState.next_state = 
         (uint8_t)((NFCSTATUS_SUCCESS == status)?next_state:pLibContext->LibNfcState.next_state);
 
     return status;
@@ -800,26 +800,26 @@ NFCSTATUS phLibNfc_Mgt_GetstackCapabilities(
 {
     NFCSTATUS RetVal = NFCSTATUS_FAILED;
     /*Check Lib Nfc stack is initilized*/
-    if((NULL == gpphLibContext)||
+    if((NULL == gpphLibContext)|| 
         (gpphLibContext->LibNfcState.cur_state == eLibNfcHalStateShutdown))
     {
         RetVal = NFCSTATUS_NOT_INITIALISED;
-    }
+    }   
     /*Check application has sent the valid parameters*/
     else if((NULL == phLibNfc_StackCapabilities)
         || (NULL == pContext))
     {
         RetVal= NFCSTATUS_INVALID_PARAMETER;
-    }
+    }   
     else if(gpphLibContext->LibNfcState.next_state == eLibNfcHalStateShutdown)
     {
         RetVal = NFCSTATUS_SHUTDOWN;
     }
-    else if(TRUE == gpphLibContext->status.GenCb_pending_status)
+    else if(TRUE == gpphLibContext->status.GenCb_pending_status)       
     {
         /*Previous operation is pending  */
         RetVal = NFCSTATUS_BUSY;
-    }
+    }    
     else
     {
         /* Tag Format Capabilities*/
@@ -840,24 +840,24 @@ NFCSTATUS phLibNfc_Mgt_GetstackCapabilities(
         phLibNfc_StackCapabilities->psMappingCapabilities.ISO14443_4B = TRUE;
         phLibNfc_StackCapabilities->psMappingCapabilities.MifareStd = TRUE;
         phLibNfc_StackCapabilities->psMappingCapabilities.MifareUL = TRUE;
-        phLibNfc_StackCapabilities->psMappingCapabilities.MifareULC = TRUE;
+        phLibNfc_StackCapabilities->psMappingCapabilities.MifareULC = TRUE;     
         phLibNfc_StackCapabilities->psMappingCapabilities.Jewel = TRUE;
         phLibNfc_StackCapabilities->psMappingCapabilities.ISO15693 = FALSE;
-
+        
         /*Call Hal4 Get Dev Capabilities to get info about protocols supported
           by Lib Nfc*/
         PHDBG_INFO("LibNfc:Get Stack capabilities ");
-        RetVal= phHal4Nfc_GetDeviceCapabilities(
-                        gpphLibContext->psHwReference,
+        RetVal= phHal4Nfc_GetDeviceCapabilities(                                          
+                        gpphLibContext->psHwReference,                            
                         &(phLibNfc_StackCapabilities->psDevCapabilities),
-                        (void *)gpphLibContext);
+                        (void *)gpphLibContext); 
 
         LIB_NFC_VERSION_SET(phLibNfc_StackCapabilities->psDevCapabilities.hal_version,
                             PH_HAL4NFC_VERSION,
                             PH_HAL4NFC_REVISION,
                             PH_HAL4NFC_PATCH,
                             PH_HAL4NFC_BUILD);
-
+                
         phLibNfc_StackCapabilities->psDevCapabilities.fw_version=
             gpphLibContext->psHwReference->device_info.fw_version;
         phLibNfc_StackCapabilities->psDevCapabilities.hci_version=
@@ -865,11 +865,10 @@ NFCSTATUS phLibNfc_Mgt_GetstackCapabilities(
         phLibNfc_StackCapabilities->psDevCapabilities.hw_version=
             gpphLibContext->psHwReference->device_info.hw_version;
         phLibNfc_StackCapabilities->psDevCapabilities.model_id=
-            gpphLibContext->psHwReference->device_info.model_id;
+            gpphLibContext->psHwReference->device_info.model_id;        
         (void)memcpy(phLibNfc_StackCapabilities->psDevCapabilities.full_version,
             gpphLibContext->psHwReference->device_info.full_version,NXP_FULL_VERSION_LEN);
         /* Check the firmware version */
-
         if (nxp_nfc_full_version == NULL) {
             // Couldn't load firmware, just pretend we're up to date.
 //            LOGW("Firmware image not available: this device might be running old NFC firmware!");
@@ -880,7 +879,7 @@ NFCSTATUS phLibNfc_Mgt_GetstackCapabilities(
         }
 
         if(NFCSTATUS_SUCCESS != RetVal)
-        {
+        {       
             RetVal = NFCSTATUS_FAILED;
         }
     }
@@ -897,18 +896,18 @@ NFCSTATUS phLibNfc_Mgt_ConfigureTestMode(void   *pDriverHandle,
                                  phLibNfc_Cfg_Testmode_t eTstmode,
                                  void                *pContext)
 {
-     NFCSTATUS Status = NFCSTATUS_SUCCESS;
+     NFCSTATUS Status = NFCSTATUS_SUCCESS;  
      phHal4Nfc_InitType_t eInitType=eInitDefault;
-
+     
      if((NULL == pDriverHandle)||(NULL == pTestModeCb))
      {
         Status = NFCSTATUS_INVALID_PARAMETER;
      }
      else if((NULL != gpphLibContext) && \
          (gpphLibContext->LibNfcState.next_state==eLibNfcHalStateShutdown))
-     {
+     { 
         Status = NFCSTATUS_SHUTDOWN;
-     }
+     } 
      else if( (eTstmode == phLibNfc_TstMode_On) && (NULL != gpphLibContext))
      {
         Status=NFCSTATUS_ALREADY_INITIALISED;
@@ -918,7 +917,7 @@ NFCSTATUS phLibNfc_Mgt_ConfigureTestMode(void   *pDriverHandle,
         Status = NFCSTATUS_NOT_INITIALISED;
      }
      else if( (eTstmode == phLibNfc_TstMode_Off) && (NULL != gpphLibContext))
-     {
+     {          
         if (NULL!= gpphLibContext->CBInfo.pClientShutdownCb)
         {   /* Previous callback pending */
             Status = NFCSTATUS_BUSY;
@@ -943,9 +942,9 @@ NFCSTATUS phLibNfc_Mgt_ConfigureTestMode(void   *pDriverHandle,
             {
                 Status =NFCSTATUS_FAILED;
             }
-        }
+        }       
      }
-     else
+     else 
      {
             /* Initialize the Lib context */
         gpphLibContext=(pphLibNfc_LibContext_t)phOsalNfc_GetMemory(
@@ -993,7 +992,7 @@ NFCSTATUS phLibNfc_Mgt_ConfigureTestMode(void   *pDriverHandle,
             phLibNfc_Ndef_Init();
         }
     }
-
+    
    return Status;
 }
 

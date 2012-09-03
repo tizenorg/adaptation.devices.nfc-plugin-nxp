@@ -654,7 +654,7 @@ phFriNfc_NdefMap_ConvertToReadOnly (
     {
         result = PHNFCSTVAL(CID_FRI_NFC_NDEF_MAP, NFCSTATUS_INVALID_PARAMETER);
     }
-    else if ((NdefMap->CompletionRoutine->CompletionRoutine == NULL)
+    else if ((NdefMap->CompletionRoutine->CompletionRoutine == NULL) 
         || (NdefMap->CompletionRoutine->Context == NULL))
     {
         result = PHNFCSTVAL(CID_FRI_NFC_NDEF_MAP, NFCSTATUS_INVALID_PARAMETER);
@@ -761,7 +761,7 @@ NFCSTATUS phFriNfc_NdefMap_ChkNdef( phFriNfc_NdefMap_t     *NdefMap)
                 break;
             }
 #else /* #ifndef PH_FRINFC_MAP_ISO15693_DISABLED */
-            status = PHNFCSTVAL(CID_FRI_NFC_NDEF_MAP,
+            status = PHNFCSTVAL(CID_FRI_NFC_NDEF_MAP, 
                                 NFCSTATUS_INVALID_REMOTE_DEVICE);
 #endif /* #ifndef PH_FRINFC_MAP_ISO15693_DISABLED */
 
@@ -1416,16 +1416,16 @@ NFCSTATUS phFriNfc_NdefMap_GetContainerSize(const phFriNfc_NdefMap_t *NdefMap,ui
 
                 block_no = (uint16_t)
                     ISO15693_GET_VALUE_FIELD_BLOCK_NO (
-                        NdefMap->ISO15693Container.ndef_tlv_type_blk,
-                        NdefMap->ISO15693Container.ndef_tlv_type_byte,
+                        NdefMap->ISO15693Container.ndef_tlv_type_blk, 
+                        NdefMap->ISO15693Container.ndef_tlv_type_byte, 
                         NdefMap->ISO15693Container.actual_ndef_size);
                 byte_no = (uint8_t)
                     ISO15693_GET_VALUE_FIELD_BYTE_NO (
-                        NdefMap->ISO15693Container.ndef_tlv_type_blk,
-                        NdefMap->ISO15693Container.ndef_tlv_type_byte,
+                        NdefMap->ISO15693Container.ndef_tlv_type_blk, 
+                        NdefMap->ISO15693Container.ndef_tlv_type_byte, 
                         NdefMap->ISO15693Container.actual_ndef_size);
 
-                *maxSize = (NdefMap->ISO15693Container.max_data_size -
+                *maxSize = (NdefMap->ISO15693Container.max_data_size - 
                             ((block_no * ISO15693_BYTES_PER_BLOCK) + byte_no));
 #else /* #if 1 */
                 /* 2 is used to exclude the T and L part of the TLV */

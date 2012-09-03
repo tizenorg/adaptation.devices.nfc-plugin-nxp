@@ -106,6 +106,7 @@ static phDal4Nfc_SContext_t           gDalContext;
 static pphDal4Nfc_SContext_t          pgDalContext;
 static phHal_sHwReference_t   *       pgDalHwContext;
 static sem_t                          nfc_read_sem;
+static int                            low_level_traces;
 #ifdef USE_MQ_MESSAGE_QUEUE
 static phDal4Nfc_DeferredCall_Msg_t   nDeferedMessage;
 static mqd_t                          nDeferedCallMessageQueueId;
@@ -124,6 +125,31 @@ static void      phDal4Nfc_FillMsg        (phDal4Nfc_Message_t *pDalMsg, phOsalN
 /*-----------------------------------------------------------------------------------
                                 DAL API IMPLEMENTATION
 ------------------------------------------------------------------------------------*/
+
+static void refresh_low_level_traces() {
+#ifdef LOW_LEVEL_TRACES
+    low_level_traces = 1;
+    return;
+#else
+
+#ifdef ANDROID
+    char value[PROPERTY_VALUE_MAX];
+
+    property_get("ro.debuggable", value, "");
+    if (!value[0] || !atoi(value)) {
+        low_level_traces = 0;  // user build, do not allow debug
+        return;
+    }
+
+    property_get("debug.nfc.LOW_LEVEL_TRACES", value, "0");
+    if (value[0]) {
+        low_level_traces = atoi(value);
+        return;
+    }
+#endif
+    low_level_traces = 0;
+#endif
+}
 
 /*-----------------------------------------------------------------------------
 
@@ -224,6 +250,8 @@ NFCSTATUS phDal4Nfc_Init(void *pContext, void *pHwRef )
 {
     NFCSTATUS        result = NFCSTATUS_SUCCESS;
 
+ //   refresh_low_level_traces();
+
     if ((NULL != pContext) && (NULL != pHwRef))
     {
         pContext  = pgDalContext;
@@ -290,7 +318,7 @@ NFCSTATUS phDal4Nfc_Shutdown( void *pContext, void *pHwRef)
    return result;
 }
 
-NFCSTATUS phDal4Nfc_ConfigRelease( void *pHwRef)
+NFCSTATUS phDal4Nfc_ConfigRelease(void *pHwRef)
 {
 
    NFCSTATUS result = NFCSTATUS_SUCCESS;
@@ -550,7 +578,8 @@ NFCSTATUS phDal4Nfc_Config(pphDal4Nfc_sConfig_t config,void **phwref)
 
    /* Register the link callbacks */
    memset(&gLinkFunc, 0, sizeof(phDal4Nfc_link_cbk_interface_t));
-   switch(PN544_LINK_TYPE_I2C)
+#if 0
+  switch(PN544_LINK_TYPE_I2C)
    {
       case PN544_LINK_TYPE_UART:
       case PN544_LINK_TYPE_USB:
@@ -570,7 +599,9 @@ NFCSTATUS phDal4Nfc_Config(pphDal4Nfc_sConfig_t config,void **phwref)
       break;
 
       case PN544_LINK_TYPE_I2C:
-      {
+     {
+#endif
+
 	 DAL_PRINT("I2C link Config");
          /* i2c link interface */
          gLinkFunc.init               = phDal4Nfc_i2c_initialize;
@@ -582,15 +613,16 @@ NFCSTATUS phDal4Nfc_Config(pphDal4Nfc_sConfig_t config,void **phwref)
          gLinkFunc.read               = phDal4Nfc_i2c_read;
          gLinkFunc.write              = phDal4Nfc_i2c_write;
          gLinkFunc.reset              = phDal4Nfc_i2c_reset;
+#if 0
          break;
       }
-
       default:
       {
          /* Shound not happen : Bad parameter */
          return PHNFCSTVAL(CID_NFC_DAL, NFCSTATUS_INVALID_PARAMETER);
       }
-   }
+}
+#endif
 
    gLinkFunc.init(); /* So that link interface can initialize its internal state */
    retstatus = gLinkFunc.open_and_configure(config, phwref);
@@ -614,19 +646,7 @@ NFCSTATUS phDal4Nfc_Config(pphDal4Nfc_sConfig_t config,void **phwref)
    nDeferedCallMessageQueueId = config->nClientId;
 #endif
 
-	usleep(50000);
-
-	if(phDal4Nfc_Reset(0) != 0)
-	{
-		perror("power off is failed !!");
-	}
-
-	usleep(50000);
-
- 	if(phDal4Nfc_Reset(1) != 0)
-	{
-		perror("power on is failed !!");
-	}
+//   gDalContext.pDev = pn544_dev;
 
    /* Start Read and Write Threads */
    if(NFCSTATUS_SUCCESS != phDal4Nfc_StartThreads())
@@ -635,6 +655,9 @@ NFCSTATUS phDal4Nfc_Config(pphDal4Nfc_sConfig_t config,void **phwref)
    }
 
    gDalContext.hw_valid = TRUE;
+   phDal4Nfc_Reset(1);
+   phDal4Nfc_Reset(0);
+   phDal4Nfc_Reset(1);
 
    return NFCSTATUS_SUCCESS;
 }
@@ -650,7 +673,7 @@ NFCSTATUS phDal4Nfc_Reset(long level)
 {
    NFCSTATUS	retstatus = NFCSTATUS_SUCCESS;
 
-   DAL_DEBUG("phDal4Nfc_Reset: VEN to %d",(int)level);
+   DAL_DEBUG("phDal4Nfc_Reset: VEN to %ld",level);
 
    retstatus = gLinkFunc.reset(level);
 
@@ -913,12 +936,18 @@ void phDal4Nfc_DeferredCb (void  *params)
             break;
         case PHDAL4NFC_WRITE_MESSAGE:
             DAL_PRINT(" Dal deferred write called \n");
-
+#if 0
+            if(low_level_traces)
+            {
+                phOsalNfc_PrintData("SEND", (uint16_t)gReadWriteContext.nNbOfBytesToWrite,
+                        gReadWriteContext.pWriteBuffer, low_level_traces);
+            }
+#endif
             /* DAL_DEBUG("dalMsg->transactInfo.length : %d\n", dalMsg->transactInfo.length); */
             /* Make a Physical WRITE */
             /* NOTE: need to usleep(3000) here if the write is for SWP */
             usleep(500);  /* NXP advise 500us sleep required between I2C writes */
-              gReadWriteContext.nNbOfBytesWritten = gLinkFunc.write(gReadWriteContext.pWriteBuffer, gReadWriteContext.nNbOfBytesToWrite);
+            gReadWriteContext.nNbOfBytesWritten = gLinkFunc.write(gReadWriteContext.pWriteBuffer, gReadWriteContext.nNbOfBytesToWrite);
             if (gReadWriteContext.nNbOfBytesWritten != gReadWriteContext.nNbOfBytesToWrite)
             {
                 /* controller may be in standby. do it again! */
@@ -979,7 +1008,7 @@ void phDal4Nfc_DeferredCb (void  *params)
  */
 void phDal4Nfc_DeferredCall(pphDal4Nfc_DeferFuncPointer_t func, void *param)
 {
-//    int                retvalue = 0;
+    int                retvalue = 0;
     phDal4Nfc_Message_Wrapper_t nDeferedMessageWrapper;
     phDal4Nfc_DeferredCall_Msg_t *pDeferedMessage;
     static phDal4Nfc_DeferredCall_Msg_t nDeferedMessageRead;

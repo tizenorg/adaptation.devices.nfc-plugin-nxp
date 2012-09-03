@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010 NXP Semiconductors
- * Copyright (C) 2012 Samsung Elevtronics Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,14 +124,14 @@
 
 
 /**<  Indicates PN544 Power Modes Configuration for the NFC Device,
-      0x00U -> PN544 stays in active bat mode
+      0x00U -> PN544 stays in active bat mode 
                (except when generating RF field)
-      0x01U -> PN544 goes in standby when possible otherwise
+      0x01U -> PN544 goes in standby when possible otherwise 
                stays in active bat mode
-      0x02U -> PN544 goes in idle mode as soon as it can
+      0x02U -> PN544 goes in idle mode as soon as it can 
                (otherwise it is in active bat except when generating RF field)
-      0x03U -> PN544 goes in standby when possible otherwise goes in idle mode
-               as soon as it can (otherwise it is in active bat except when
+      0x03U -> PN544 goes in standby when possible otherwise goes in idle mode 
+               as soon as it can (otherwise it is in active bat except when 
                generating RF field)
       */
 
@@ -151,7 +150,7 @@
 /**< Max number of remote devices supported */
 
 #ifndef MAX_REMOTE_DEVICES
-#define MAX_REMOTE_DEVICES        0x0A
+#define MAX_REMOTE_DEVICES        0x0A 
 #endif
 
 /**<  System Event Notification
@@ -177,7 +176,7 @@
 #endif
 
 #ifndef NXP_MIFARE_XCHG_TIMEOUT
-#define NXP_MIFARE_XCHG_TIMEOUT         0x03U
+#define NXP_MIFARE_XCHG_TIMEOUT         0x0BU
 #endif
 
 #ifndef NXP_FELICA_XCHG_TIMEOUT
@@ -199,29 +198,35 @@
 /**< Presence check interval in milliseconds */
 #ifndef PRESENCE_CHECK_INTERVAL
 #define PRESENCE_CHECK_INTERVAL   500U
-#endif
+#endif 
 
-/** Resolution value for the timer, here the
+/** Resolution value for the timer, here the 
     timer resolution is 500 milliseconds */
 #ifndef TIMER_RESOLUTION
 #define TIMER_RESOLUTION                500U
-#endif
+#endif 
 
 /* Kindly note that the below Timeout values should be
  * in Multiples of the value provided to TIMER_RESOLUTION
  */
 
-/**< Defines guard time out value for LLC timer,
+/**< Defines guard time out value for LLC timer, 
     1000 is in milliseconds */
 #ifndef LINK_GUARD_TIMEOUT
 #define LINK_GUARD_TIMEOUT              1000U
-#endif
+#endif 
 
 
-/**< Defines connection time out value for LLC timer,
+/**< Defines connection time out value for LLC timer, 
     1000 is in milliseconds */
 #ifndef LINK_CONNECTION_TIMEOUT
 #define LINK_CONNECTION_TIMEOUT         1000U
+#endif 
+
+/**< Defines ACK time out value for LLC timer,
+    150 is in milliseconds */
+#ifndef LINK_ACK_TIMEOUT
+#define LINK_ACK_TIMEOUT                1U
 #endif
 
 
@@ -230,11 +235,11 @@
 
 
 #ifndef NXP_DNLD_COMPLETE_TIMEOUT
-#define NXP_DNLD_COMPLETE_TIMEOUT         120000U
+#define NXP_DNLD_COMPLETE_TIMEOUT         60000U
 #endif
 
 
-/**< Define to configure the Active Mode Polling Guard Time-out
+/**< Define to configure the Active Mode Polling Guard Time-out 
   */
 
 #ifndef DEV_MGMT_ACT_GRD_TO_DEFAULT
@@ -270,7 +275,7 @@
 
 #ifndef HOST_CE_A_SAK_DEFAULT
 #define HOST_CE_A_SAK_DEFAULT           0x20U
-#endif
+#endif 
 
 #ifndef NXP_CE_A_ATQA_HIGH
 #define NXP_CE_A_ATQA_HIGH              0x00U
@@ -283,11 +288,11 @@
 
 #ifndef NXP_UICC_CE_RIGHTS
 #define NXP_UICC_CE_RIGHTS              0x0FU
-#endif
+#endif 
 
 #ifndef NXP_UICC_RD_RIGHTS
 #define NXP_UICC_RD_RIGHTS              0x00U
-#endif
+#endif 
 
 
 /*
@@ -297,7 +302,7 @@
  */
 
 #define ES_HW_VER   32
-
+ 
 /*
  *****************************************************************
  *************** FEATURE SPECIFIC MACROS *************************
@@ -310,11 +315,11 @@
  * Initialisation */
 
 #if !defined(NXP_SMX)
-#define NXP_SMX 0
+#define NXP_SMX 1
 #endif
 
 #if (NXP_SMX == 1)
-#define NXP_HAL_ENABLE_SMX
+#define NXP_HAL_ENABLE_SMX 
 #endif
 
 /**< Macro to Enable the Host Session
@@ -421,7 +426,7 @@
 #define LLC_TIMER_ENABLE
 
 /**< Macro to enable HCI Response timer */
-/* #define NXP_NFC_HCI_TIMER 1 */
+#define NXP_NFC_HCI_TIMER 1
 
 /* A Workaround to Delay and obtain the UICC Status Information */
 /* #define UICC_STATUS_DELAY */

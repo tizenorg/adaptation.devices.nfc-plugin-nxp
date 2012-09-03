@@ -387,7 +387,7 @@ typedef phLibNfc_sConfig_t *pphDal4Nfc_sConfig_t;
  * This asynchronous function reads the data from the driver in which length
  * and the required buffer are sent by upper layer. This interface enables
  * reader thread in case there is no read requests pending and returns sucessfully.
- * Once read operation is complete, it notifies  to upper layer through callback
+ * Once read operation is complete, it notifies  to upper layer through callback 
  * registered in the \b \e phDal4Nfc_Register() function.
  *
  *
@@ -443,10 +443,10 @@ typedef phLibNfc_sConfig_t *pphDal4Nfc_sConfig_t;
  * \brief Allows to wait before reading data block from HW Interface.
  *
  * This asynchronous function waits before reading the data from the
- * driver in which length  and the required buffer are sent by upper layer.
+ * driver in which length  and the required buffer are sent by upper layer.  
  * This interface  enables reader thread  to wait for predefined time period
- * (predefined time period is configurable by the DAL implementer) to complete
- * read request.Once read operation is complete, it notifies to upper layer
+ * (predefined time period is configurable by the DAL implementer) to complete  
+ * read request.Once read operation is complete, it notifies to upper layer 
  * through callback registered in the \b \e phDal4Nfc_Register()
  * function. Read request is expected to get complete within this time.
  *
@@ -558,7 +558,7 @@ typedef phLibNfc_sConfig_t *pphDal4Nfc_sConfig_t;
  * sends the HANDLE to the caller.
  *
  * \param[in]       config     DAL configuration details as provided
- *                             by the upper layer.
+ *                             by the upper layer. 
  * \param[in,out]   phwref     pointer to which valid Handle to DAL
  *                             interface is assigned.
  *
@@ -589,7 +589,7 @@ typedef phLibNfc_sConfig_t *pphDal4Nfc_sConfig_t;
  *
  * \brief Release configuration for the given HW Interface.
  *
- * \copydoc page_reg Release all the variables of the DAL component, that has been
+ * \copydoc page_reg Release all the variables of the DAL component, that has been 
  *      initialised in \b phDal4Nfc_Config function (Synchronous function).
  *
  * \param[in] pHwRef            Link information of the hardware
@@ -610,20 +610,20 @@ typedef phLibNfc_sConfig_t *pphDal4Nfc_sConfig_t;
  *UpperLayer=>phDal4Nfc [label="phDal4Nfc_Shutdown()",URL="\ref	phDal4Nfc_Shutdown"];
  *UpperLayer<<phDal4Nfc [label="NFCSTATUS_SUCCESS"];
  *ClientApp=>phDal4Nfc [label="phDal4Nfc_ConfigRelease()",URL="\ref phDal4Nfc_ConfigRelease"];
- *ClientApp<<phDal4Nfc [label="NFCSTATUS_SUCCESS"];
+ *ClientApp<<phDal4Nfc [label="NFCSTATUS_SUCCESS"]; 
  *\endmsc
  */
-extern
-NFCSTATUS
+extern 
+NFCSTATUS 
 phDal4Nfc_ConfigRelease(
     void        *pHwRef);
 
-extern
-NFCSTATUS
+extern 
+NFCSTATUS 
 phDal4Nfc_Reset(long level);
 
-extern
-NFCSTATUS
+extern 
+NFCSTATUS 
 phDal4Nfc_Download();
 
 /******************** Function declarations *************************/
