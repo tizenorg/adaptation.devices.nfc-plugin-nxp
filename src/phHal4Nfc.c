@@ -348,15 +348,6 @@ int dlopen_firmware() {
     return 0;
 
 }
-
-void dlclose_firmware()
-{
-	if (handle != NULL)
-	{
-		dlclose(handle);
-		handle = NULL;
-	}
-}
 #endif
 /**
  *  The open function called by the upper HAL when HAL4 is to be opened
@@ -391,8 +382,10 @@ NFCSTATUS phHal4Nfc_Open(
         openRetVal =  PHNFCSTVAL(CID_NFC_HAL ,NFCSTATUS_ALREADY_INITIALISED);
     }
     else/*Do an initialization*/
-    {
+    { 
+#ifdef ANDROID
         dlopen_firmware();
+#endif
 
         /*If hal4 ctxt in Hwreference is NULL create a new context*/
         if(NULL == ((phHal_sHwReference_t *)psHwReference)->hal_context)
@@ -737,8 +730,6 @@ NFCSTATUS phHal4Nfc_Close(
         {
 
         }
-
-        dlclose_firmware();
     }
     return closeRetVal;
 }

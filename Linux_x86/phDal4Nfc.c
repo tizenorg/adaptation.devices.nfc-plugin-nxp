@@ -34,6 +34,8 @@
 #include <stdlib.h>
 #ifdef ANDROID
 #include <linux/ipc.h>
+#include <cutils/log.h>
+#include <cutils/properties.h> // for property_get
 #else
 #include <sys/msg.h>
 #endif

@@ -23,9 +23,9 @@
  *
  */
 
-
-//#include <utils/Log.h>
-
+#define LOG_TAG "NFC_i2c"
+#include <cutils/log.h>
+//#include <hardware/nfc.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -45,10 +45,6 @@
 //#include <linux/pn544.h>
 #include "pn544.h"
 
-#ifdef LOG_TAG
-#undef LOG_TAG
-#endif
-#define LOG_TAG "NFC_i2c"
 
 typedef struct
 {

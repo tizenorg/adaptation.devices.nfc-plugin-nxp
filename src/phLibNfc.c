@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010 NXP Semiconductors
- * Copyright (C) 2012 Samsung Elevtronics Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +42,7 @@
 #include <phLibNfc_initiator.h>
 #include <phLibNfc_discovery.h>
 #include <phNfcStatus.h>
-//#include <cutils/log.h>
+#include <cutils/log.h>
 /*
 *************************** Macro's  ******************************************
 */
@@ -871,7 +870,7 @@ NFCSTATUS phLibNfc_Mgt_GetstackCapabilities(
         /* Check the firmware version */
         if (nxp_nfc_full_version == NULL) {
             // Couldn't load firmware, just pretend we're up to date.
-//            LOGW("Firmware image not available: this device might be running old NFC firmware!");
+            LOGW("Firmware image not available: this device might be running old NFC firmware!");
             phLibNfc_StackCapabilities->psDevCapabilities.firmware_update_info = 0;
         } else {
             phLibNfc_StackCapabilities->psDevCapabilities.firmware_update_info = memcmp(phLibNfc_StackCapabilities->psDevCapabilities.full_version, nxp_nfc_full_version,

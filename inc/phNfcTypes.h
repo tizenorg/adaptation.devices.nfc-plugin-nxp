@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010 NXP Semiconductors
- * Copyright (C) 2012 Samsung Elevtronics Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -223,21 +222,6 @@ typedef struct phNfc_sData_t
     uint32_t            length;
 } phNfc_sData_t;
 
-
-/**
- *\brief Possible Hardware Configuration exposed to upper layer.
- * Typically this should be port name (Ex:"COM1","COM2") to which PN544 is connected.
- */
-typedef enum
-{
-   ENUM_LINK_TYPE_UART,
-   ENUM_LINK_TYPE_I2C,
-   ENUM_LINK_TYPE_USB,
-   ENUM_LINK_TYPE_TCP,
-
-   ENUM_LINK_TYPE_NB,
-} phLibNfc_eConfigLinkType;
-
 /**
  * \brief Possible Hardware Configuration exposed to upper layer.
  * Typically this should be at least the communication link (Ex:"COM1","COM2")
@@ -379,9 +363,9 @@ typedef enum phNfc_eMifareCmdList_t
     phNfc_eMifareRaw        = 0x00U,     /**< This command performs raw transcations .
                                               Format of the phLibNfc_sTransceiveInfo_t 
                                               content in this case shall be as below: 
-                                                Â•   cmd: filed shall set to  phHal_eMifareRaw . 
-                                                Â•   addr : doesn't carry any significance.
-                                                Â•   sSendData : Shall contain formatted raw buffer 
+                                                •   cmd: filed shall set to  phHal_eMifareRaw . 
+                                                •   addr : doesn't carry any significance.
+                                                •   sSendData : Shall contain formatted raw buffer 
                                                                 based on MIFARE commands type used. 
                                                                 Formatted buffer shall follow below 
                                                                 formating scheme.
@@ -395,10 +379,10 @@ typedef enum phNfc_eMifareCmdList_t
     phNfc_eMifareAuthentA   = 0x60U,     /**< Mifare Standard:\n
                                               This command performs an authentication with KEY A for a sector.\n
                                               Format of the phLibNfc_sTransceiveInfo_t content in this case is : 
-                                                Â•       cmd: field shall set to  phHal_eMifareAuthentA . 
-                                                Â•       addr : indicates MIFARE block address. 
+                                                •       cmd: field shall set to  phHal_eMifareAuthentA . 
+                                                •       addr : indicates MIFARE block address. 
                                                            Ex: 0x08 indicates block 8 needs to be authenticated.
-                                                Â•       sSendData : Shall contain authentication key values. 
+                                                •       sSendData : Shall contain authentication key values. 
                                                                     sSendData ,buffer shall contain authentication 
                                                                     key values 01 02 03 04 05 06 authenticates 
                                                                     block 08 with the key 0x01[..]06. If this 
@@ -408,10 +392,10 @@ typedef enum phNfc_eMifareCmdList_t
     phNfc_eMifareAuthentB   = 0x61U,     /**< Mifare Standard:\n
                                               This command performs an authentication with KEY B for a sector.\n
                                               Format of the phLibNfc_sTransceiveInfo_t content in this case is : 
-                                                Â•       cmd: field shall set to  phHal_eMifareAuthentB . 
-                                                Â•       addr : indicates MIFARE block address. 
+                                                •       cmd: field shall set to  phHal_eMifareAuthentB . 
+                                                •       addr : indicates MIFARE block address. 
                                                            Ex: 0x08 indicates block 8 needs to be authenticated.
-                                                Â•       sSendData : Shall contain authentication key values. 
+                                                •       sSendData : Shall contain authentication key values. 
                                                                     sSendData ,buffer shall contain authentication 
                                                                     key values 01 02 03 04 05 06 authenticates 
                                                                     block 08 with the key 0x01[..]06. If this 
@@ -421,9 +405,9 @@ typedef enum phNfc_eMifareCmdList_t
     phNfc_eMifareRead16     = 0x30U,     /**< Mifare Standard and Ultra Light:\n
                                               Read 16 Bytes from a Mifare Standard block or 4 Mifare Ultra Light pages.\n
                                               Format of the phLibNfc_sTransceiveInfo_t content in this case is : 
-                                                Â•       cmd: field shall set to  phHal_eMifareRead16 . 
-                                                Â•       addr : memory adress to read.   
-                                                Â•       sRecvData : Shall contain buffer of size 16 
+                                                •       cmd: field shall set to  phHal_eMifareRead16 . 
+                                                •       addr : memory adress to read.   
+                                                •       sRecvData : Shall contain buffer of size 16 
                                                                     to read the data into.                                                                  
 
                                               If this command fails, the user needs to reactivate the 
@@ -433,9 +417,9 @@ typedef enum phNfc_eMifareCmdList_t
     phNfc_eMifareWrite16    = 0xA0U,     /**< Mifare Standard and Ultra Light:\n
                                               Write 16 Bytes to a Mifare Standard block or 4 Mifare Ultra Light pages.\n
                                               Format of the phLibNfc_sTransceiveInfo_t content in this case is : 
-                                                Â•       cmd: field shall set to  phHal_eMifareWrite16 . 
-                                                Â•       addr : starting memory adress to write from.   
-                                                Â•       sSendData : Shall contain buffer of size 16 containing
+                                                •       cmd: field shall set to  phHal_eMifareWrite16 . 
+                                                •       addr : starting memory adress to write from.   
+                                                •       sSendData : Shall contain buffer of size 16 containing
                                                                     the data bytes to be written.                                                                  
                                              
                                               If this command fails, the user needs to reactivate the 
@@ -444,9 +428,9 @@ typedef enum phNfc_eMifareCmdList_t
     phNfc_eMifareWrite4     = 0xA2U,     /**< Mifare Ultra Light:\n
                                               Write 4 bytes.\n
                                               Format of the phLibNfc_sTransceiveInfo_t content in this case is : 
-                                                Â•       cmd: field shall set to  phHal_eMifareWrite4 . 
-                                                Â•       addr : starting memory adress to write from.   
-                                                Â•       sSendData : Shall contain buffer of size 4 containing
+                                                •       cmd: field shall set to  phHal_eMifareWrite4 . 
+                                                •       addr : starting memory adress to write from.   
+                                                •       sSendData : Shall contain buffer of size 4 containing
                                                                     the data bytes to be written.                                                                  
 
                                               If this command fails, the user needs to reactivate the 

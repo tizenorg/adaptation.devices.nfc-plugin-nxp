@@ -127,19 +127,6 @@ typedef struct phDal4Nfc_Message
     pphNfcIF_Transact_Completion_CB_t   writeCbPtr;
 } phDal4Nfc_Message_t,*pphDal4Nfc_Message_t;
 
-/**
- * \ingroup grp_nfc_dal
- *\brief Possible DAL Configuration exposed to upper layer.
- * Typically this should be port name (Ex:"COM1","COM2") to which PN544 is connected.
- */
-#define   PN544_LINK_TYPE_UART ENUM_LINK_TYPE_UART
-#define   PN544_LINK_TYPE_I2C ENUM_LINK_TYPE_I2C
-#define   PN544_LINK_TYPE_USB ENUM_LINK_TYPE_USB
-#define   PN544_LINK_TYPE_TCP ENUM_LINK_TYPE_TCP
-
-#define   PN544_LINK_TYPE_NB ENUM_LINK_TYPE_NB
-typedef phLibNfc_eConfigLinkType phDal4Nfc_eConfigLinkType;
-
 typedef phLibNfc_sConfig_t phDal4Nfc_sConfig_t;
 typedef phLibNfc_sConfig_t *pphDal4Nfc_sConfig_t;
 
@@ -505,8 +492,8 @@ typedef phLibNfc_sConfig_t *pphDal4Nfc_sConfig_t;
  *
  *\brief  Aborts read wait opertaion.
  *
- * This asynchronous function issues cancellation of the outstanding
- * \b \e phDal4Nfc_ReadWait request.If upper layer wants to cancel the
+ * This asynchronous function issues cancellation of the outstanding 
+ * \b \e phDal4Nfc_ReadWait request.If upper layer wants to cancel the 
  * ongoing read wait operation this function is used. e.g. to abort the
  * transactions.
  *

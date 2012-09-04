@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010 NXP Semiconductors
- * Copyright (C) 2012 Samsung Elevtronics Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -675,14 +674,12 @@ phFriNfc_NdefMap_ConvertToReadOnly (
                 break;
             }
 
-/* Samsung modify for TIZEN */
-#if 0
             case PH_FRINFC_NDEFMAP_ISO15693_CARD:
             {
                 result = phFriNfc_ISO15693_ConvertToReadOnly (NdefMap);
                 break;
             }
-#endif
+
             default:
             {
                 result = PHNFCSTVAL(CID_FRI_NFC_NDEF_MAP,

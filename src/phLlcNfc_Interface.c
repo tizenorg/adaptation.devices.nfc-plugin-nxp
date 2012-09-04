@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010 NXP Semiconductors
- * Copyright (C) 2012 Samsung Elevtronics Co., Ltd *
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +45,7 @@
 #endif
 #define LOG_TAG "NFC-LLC"
 
-//#include <utils/Log.h>
+#include <utils/Log.h>
 /*********************** End of includes ****************************/
 
 /***************************** Macros *******************************/
@@ -787,7 +786,7 @@ phLlcNfc_RdResp_Cb(
                 else if (ps_frame_info->recv_error_count < 
                     PH_LLCNFC_MAX_REJ_RETRY_COUNT)
                 {
-//                    LOGW("LLC bad crc");
+                    LOGW("LLC bad crc");
                     PH_LLCNFC_PRINT("CRC ERROR RECVD \n");
                     PH_LLCNFC_DEBUG("RECV ERROR COUNT : 0x%02X\n", ps_frame_info->recv_error_count);
 
@@ -808,7 +807,7 @@ phLlcNfc_RdResp_Cb(
                 }
                 else
                 {
-//                    LOGE("max LLC retries exceeded, stack restart");
+                    LOGE("max LLC retries exceeded, stack restart");
                     result = phLlcNfc_Interface_Read (ps_llc_ctxt, 
                                 PH_LLCNFC_READWAIT_OFF, 
                                 (uint8_t *)&(ps_recv_pkt->s_llcbuf.llc_length_byte), 
@@ -833,7 +832,7 @@ phLlcNfc_RdResp_Cb(
             else if (ps_frame_info->recv_error_count >= 
                     PH_LLCNFC_MAX_REJ_RETRY_COUNT)
             {
-//                LOGE("max LLC retries exceeded, stack restart");
+                LOGE("max LLC retries exceeded, stack restart");
                 result = phLlcNfc_Interface_Read (ps_llc_ctxt, 
                         PH_LLCNFC_READWAIT_OFF, 
                         (uint8_t *)&(ps_recv_pkt->s_llcbuf.llc_length_byte), 
@@ -856,7 +855,7 @@ phLlcNfc_RdResp_Cb(
                 (PH_LLCNFC_MAX_BUFLEN_RECV_SEND > pCompInfo->length) && 
                 (pCompInfo->length != ps_recv_pkt->s_llcbuf.llc_length_byte))
             {
-//                LOGE("bad LLC length1 %d", pCompInfo->length);
+                LOGE("bad LLC length1 %d", pCompInfo->length);
                 ps_frame_info->recv_error_count = (uint8_t)
                                     (ps_frame_info->recv_error_count + 1);
                 libnfc_llc_error_count++;
@@ -884,7 +883,7 @@ phLlcNfc_RdResp_Cb(
                     value is greater than (0x21 - 1), then pend a read to 
                     get 1 byte again
                 */
-//                LOGW("bad LLC length byte %x\n", *(pCompInfo->buffer));
+                LOGW("bad LLC length byte %x\n", *(pCompInfo->buffer));
                 ps_frame_info->recv_error_count = (uint8_t)
                                     (ps_frame_info->recv_error_count + 1);
                 libnfc_llc_error_count++;
@@ -896,7 +895,7 @@ phLlcNfc_RdResp_Cb(
             }
             else
             {
-//                LOGW("unknown LLC error1");
+                LOGW("unknown LLC error1");
                 ps_frame_info->recv_error_count = (uint8_t)
                                     (ps_frame_info->recv_error_count + 1);
                 libnfc_llc_error_count++;
@@ -920,7 +919,7 @@ phLlcNfc_RdResp_Cb(
             }
         } else if (NFCSTATUS_READ_FAILED == pCompInfo->status) {
             // partial read - try reading the length byte again
-//            LOGW("LLC length mis-match\n");
+            LOGW("LLC length mis-match\n");
             ps_frame_info->recv_error_count = (uint8_t)
                                 (ps_frame_info->recv_error_count + 1);
             libnfc_llc_error_count++;
@@ -932,7 +931,7 @@ phLlcNfc_RdResp_Cb(
         }
         else
         {
-//            LOGW("unknown LLC error2");
+            LOGW("unknown LLC error2");
             ps_frame_info->recv_error_count = (uint8_t)
                                     (ps_frame_info->recv_error_count + 1);
             libnfc_llc_error_count++;

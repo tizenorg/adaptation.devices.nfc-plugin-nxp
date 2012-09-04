@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010 NXP Semiconductors
- * Copyright (C) 2012 Samsung Elevtronics Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -167,7 +166,8 @@ void phOsalNfc_DbgString(const char *pString);
  *
  * \retval None
  */
-void phOsalNfc_PrintData(const char *pString, uint32_t length, uint8_t *pBuffer);
+void phOsalNfc_PrintData(const char *pString, uint32_t length, uint8_t *pBuffer,
+        int verbosity);
 
 /*!
  * \ingroup grp_osal_nfc

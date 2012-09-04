@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010 NXP Semiconductors
- * Copyright (C) 2012 Samsung Elevtronics Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +47,7 @@
 #include <phOsalNfc.h>
 #include <phOsalNfc_Timer.h>
 #include <phDal4Nfc.h>
-//#include <utils/Log.h>
+#include <utils/Log.h>
 /*
 ################################################################################
 ****************************** Macro Definitions *******************************

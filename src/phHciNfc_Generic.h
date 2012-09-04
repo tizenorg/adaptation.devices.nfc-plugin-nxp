@@ -1,6 +1,5 @@
 /*
  * Copyright (C) 2010 NXP Semiconductors
- * Copyright (C) 2012 Samsung Elevtronics Co., Ltd
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -57,6 +56,7 @@
 ################################################################################
 */
 #define LOG_TAG "NFC-HCI"
+#include <cutils/log.h>
 #include <phNfcIoctlCode.h>
 #include<phNfcInterface.h>
 #include <phHciNfc.h>

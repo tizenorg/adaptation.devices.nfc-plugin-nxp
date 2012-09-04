@@ -26,7 +26,10 @@
  * $Revision: 1.0 $
  *
  */
+
 #define LOG_TAG "NFC_uart"
+#include <cutils/log.h>
+//#include <hardware/nfc.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
@@ -43,6 +46,7 @@
 #include <phNfcStatus.h>
 #if defined(ANDROID)
 #include <string.h>
+//#include <cutils/properties.h> // for property_get
 #endif
 
 typedef struct
@@ -292,7 +296,6 @@ PURPOSE:  Reads nNbBytesToRead bytes and writes them in pBuffer.
           Returns the number of bytes really read or -1 in case of error.
 
 -----------------------------------------------------------------------------*/
-
 int phDal4Nfc_uart_read(uint8_t * pBuffer, int nNbBytesToRead)
 {
     int ret;
