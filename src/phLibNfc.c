@@ -31,7 +31,7 @@
 ************************* Header Files ****************************************
 */
 
-#define LOG_TAG "NFC"
+#define LOG_TAG "NFC_PLUGIN_NXP"
 
 #include <phLibNfc.h>
 #include <phDal4Nfc.h>

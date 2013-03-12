@@ -29,7 +29,7 @@ ENDFOREACH(flag)
 # this for NFC flag
 
 SET(EXTRA_CFLAGS "${EXTRA_CFLAGS} -fno-strict-aliasing -pipe -fomit-frame-pointer -Wall -Wno-trigraphs -Werror-implicit-function-declaration -Wl,-zdefs -fvisibility=hidden")
-SET(ARM_CFLAGS "${ARM_CFLAGS} -mapcs -mno-sched-prolog -mabi=aapcs-linux -mno-thumb-interwork -msoft-float -Uarm -fno-common -fpic")
+SET(ARM_CFLAGS "${ARM_CFLAGS} -mapcs -mno-sched-prolog -mabi=aapcs-linux -Uarm -fno-common -fpic")
 
 SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Werror-implicit-function-declaration")
 
@@ -47,7 +47,7 @@ ENDIF("${ARCH}" STREQUAL "arm")
 
 ADD_DEFINITIONS("-DPREFIX=\"${CMAKE_INSTALL_PREFIX}\"")
 ADD_DEFINITIONS("-DNFC_TIMER_CONTEXT")
-ADD_DEFINITIONS("-DTIZEN_PUBLIC")
+#ADD_DEFINITIONS("-DTIZEN_PUBLIC")
 ADD_DEFINITIONS("-DSLP_DEBUG")
 ADD_DEFINITIONS("-DDAL_TRACE")
 # this for NFC STACK compile

@@ -43,7 +43,7 @@
 #ifdef PH_LLCNFC_DALINT
 #include <phDal4Nfc.h>
 #endif
-#define LOG_TAG "NFC-LLC"
+#define LOG_TAG "NFC_PLUGIN_NXP_LLC"
 
 #include <utils/Log.h>
 /*********************** End of includes ****************************/

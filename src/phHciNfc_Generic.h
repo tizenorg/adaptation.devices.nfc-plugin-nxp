@@ -55,7 +55,7 @@
 ***************************** Header File Inclusion ****************************
 ################################################################################
 */
-#define LOG_TAG "NFC-HCI"
+#define LOG_TAG "NFC_PLUGIN_NXP_HCI"
 #include <cutils/log.h>
 #include <phNfcIoctlCode.h>
 #include<phNfcInterface.h>

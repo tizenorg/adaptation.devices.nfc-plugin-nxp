@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2010 NXP Semiconductors
- * Copyright (C) 2012 Samsung Elevtronics Co., Ltd
+ * Copyright (c) 2012, 2013 Samsung Electronics Co., Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@
  *
  */
 
-#define LOG_TAG "NFC_i2c"
+#define LOG_TAG "NFC_PLUGIN_NXP_I2C"
 #include <cutils/log.h>
 //#include <hardware/nfc.h>
 #include <stdlib.h>

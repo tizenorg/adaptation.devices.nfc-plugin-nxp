@@ -6,26 +6,15 @@
 
 Name:       nfc-plugin-nxp
 Summary:    NFC Plugin for NXP Solution
-Version:    0.0.3
-Release:    0
+Version:    0.0.7
+Release:    1
 Group:      TO_BE/FILLED_IN
 License:    TO BE FILLED IN
 Source0:    %{name}-%{version}.tar.gz
 BuildRequires: cmake
-BuildRequires: pkgconfig(aul)
-BuildRequires: pkgconfig(syspopup-caller)
 BuildRequires: pkgconfig(glib-2.0)
-BuildRequires: pkgconfig(ecore)
 BuildRequires: pkgconfig(vconf)
-BuildRequires: pkgconfig(elementary)
-BuildRequires: pkgconfig(mm-common)
-BuildRequires: pkgconfig(mm-sound)
-BuildRequires: pkgconfig(security-server)
-BuildRequires: pkgconfig(contacts-service)
-BuildRequires: pkgconfig(bluetooth-api)
-BuildRequires: pkgconfig(gconf-2.0)
 BuildRequires: pkgconfig(dlog)
-BuildRequires: pkgconfig(memo)
 BuildRequires: pkgconfig(nfc-common-lib)
 
 %description
@@ -47,14 +36,15 @@ rm -rf %{buildroot}
 
 %post 
 # file owner
-if [ ${USER} == "root" ]
+if [ "${USER}" = "root" ]
 then
-	vconftool set -t string memory/private/nfc-plugin-nxp/eeprom "" -g 6517 -i
+	vconftool set -t string memory/private/nfc-plugin-nxp/eeprom "" -g 6517 -i -f
 else
-	vconftool set -t string memory/private/nfc-plugin-nxp/eeprom ""
+	vconftool set -t string memory/private/nfc-plugin-nxp/eeprom "" -f
 fi
 
 
 %files
+%manifest nfc-plugin-nxp.manifest
 %defattr(-,root,root,-) 
 /usr/lib/libnfc-plugin.so

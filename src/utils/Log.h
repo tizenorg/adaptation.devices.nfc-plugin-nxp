@@ -12,7 +12,6 @@
 
 #define LOGE(format,args...) \
 do {\
-	LOGD(LOG_COLOR_BROWN"[file = %s : method = %s : line = %d]"LOG_COLOR_END, basename(__FILE__), __func__, __LINE__); \
 	LOGD(LOG_COLOR_BROWN""format""LOG_COLOR_END, ##args);\
 }while(0);
 

@@ -1,7 +1,7 @@
 /*
  * {nfc-plugin-nxp}
  *
- * Copyright (c) 2011 Samsung Electronics Co., Ltd All Rights Reserved 
+ * Copyright (c) 2012, 2013 Samsung Electronics Co., Ltd.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 #include <libgen.h>
 
 // below define should define before blog.h
-#define LOG_TAG "NET_NFC_MANAGER"
+#define LOG_TAG "NFC_PLUGIN_NXP_MANAGER"
 
 #include <dlog.h>
 
@@ -43,7 +43,6 @@
 
 #define DEBUG_MSG_PRINT_BUFFER(buffer,length) \
 do {\
-	LOGD(LOG_COLOR_GREEN"[file = %s : method = %s : line = %d]"LOG_COLOR_END, basename(__FILE__), __func__, __LINE__); \
 	int i = 0;\
 	LOGD(LOG_COLOR_BLUE"BUFFER => \n"LOG_COLOR_END);\
 	for(; i < length; i++)\
@@ -55,7 +54,6 @@ do {\
 
 #define DEBUG_MSG_PRINT_BUFFER_CHAR(buffer,length) \
 do {\
-	LOGD(LOG_COLOR_GREEN"[file = %s : method = %s : line = %d]"LOG_COLOR_END, basename(__FILE__), __func__, __LINE__); \
 	int i = 0;\
 	LOGD(LOG_COLOR_BLUE"BUFFER => \n"LOG_COLOR_END);\
 	for(; i < length; i++)\
@@ -67,13 +65,11 @@ do {\
 
 #define DEBUG_MSG(format,args...) \
 do {\
-	LOGD(LOG_COLOR_CYAN"[file = %s : method = %s : line = %d]"LOG_COLOR_END, basename(__FILE__), __func__, __LINE__); \
 	LOGD(LOG_COLOR_CYAN""format""LOG_COLOR_END, ##args);\
 }while(0);
 
 #define DEBUG_ERR_MSG(format,args...) \
 do {\
-	LOGD(LOG_COLOR_RED"[ERR :: file = %s : method = %s : line = %d]"LOG_COLOR_END, basename(__FILE__), __func__, __LINE__); \
 	LOGD(LOG_COLOR_RED""format""LOG_COLOR_END, ##args);\
 }while(0);
 

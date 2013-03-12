@@ -39,7 +39,7 @@
 
 #ifdef FRI_CUSTOM_LOG
 #include <stdio.h>
-#define LOG_TAG "NFC_STACK"
+#define LOG_TAG "NFC_PLUGIN_NXP_STACK"
 #include <dlog.h>
 
 #define CUST_MSG(format,args...) \
@@ -49,7 +49,6 @@ do {\
 
 #define CUST_MSG_WFL(format,args...) \
 do {\
-	LOGD("[file = %s : method = %s : line = %d] ",__FILE__, __func__, __LINE__); \
 	LOGD(format"\n", ##args);\
 }while(0);
 
@@ -62,7 +61,7 @@ do {\
 
 #ifdef FRI_CUSTOM_LOG_ONLY_I2C
 #include <stdio.h>
-#define LOG_TAG "NFC_STACK"
+#define LOG_TAG "NFC_PLUGIN_NXP_STACK"
 #include <dlog.h>
 
 #define CUST_MSG_I2C(format,args...) \
@@ -72,7 +71,6 @@ do {\
 
 #define CUST_MSG_WFL_I2C(format,args...) \
 do {\
-	LOGD("[file = %s : method = %s : line = %d] ",__FILE__, __func__, __LINE__); \
 	LOGD(format"\n", ##args);\
 }while(0);
 

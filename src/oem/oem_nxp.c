@@ -949,32 +949,33 @@ static void _net_nfc_se_notification_cb(void *pContext, phLibNfc_eSE_EvtType_t E
 		{
 			DEBUG_MSG("[0x%x]", pSeEvtInfo->UiccEvtInfo.aid.buffer[i]);
 		}
-
-		DEBUG_MSG("\n");
 	}
 
 	if (g_nxp_controller_se_cb != NULL)
 	{
 		net_nfc_request_se_event_t *se_event = NULL;
-		uint32_t	length;
 
-		length = sizeof(net_nfc_request_se_event_t) + pSeEvtInfo->UiccEvtInfo.aid.length +  pSeEvtInfo->UiccEvtInfo.param.length;
-		_net_nfc_util_alloc_mem(se_event, length);
-
+		_net_nfc_util_alloc_mem(se_event, sizeof(net_nfc_request_se_event_t));
 		if (se_event == NULL)
 		{
 			return;
 		}
 
-		se_event->length = length;
+		se_event->length = sizeof(net_nfc_request_se_event_t);
 
 		se_event->aid.length = pSeEvtInfo->UiccEvtInfo.aid.length;
 		if(se_event->aid.length > 0)
+		{
+			_net_nfc_util_alloc_mem(se_event->aid.buffer, se_event->aid.length);
 			memcpy(se_event->aid.buffer, pSeEvtInfo->UiccEvtInfo.aid.buffer, se_event->aid.length);
+		}
 
 		se_event->param.length = pSeEvtInfo->UiccEvtInfo.param.length;
 		if(se_event->param.length > 0)
+		{
+			_net_nfc_util_alloc_mem(se_event->param.buffer, se_event->param.length);
 			memcpy(se_event->param.buffer, pSeEvtInfo->UiccEvtInfo.param.buffer, se_event->param.length);
+		}
 
 		switch (EventType)
 		{
@@ -1008,6 +1009,7 @@ static void _net_nfc_se_notification_cb(void *pContext, phLibNfc_eSE_EvtType_t E
 		}
 
 		g_nxp_controller_se_cb((void *)se_event, NULL);
+
 	}
 }
 
@@ -1679,9 +1681,6 @@ static bool net_nfc_nxp_controller_init(net_nfc_error_e *result)
 			return false;
 		}
 	}
-#ifdef TIZEN_PUBLIC /* TIZEN public doesn't support firmware update */
-	DEBUG_MSG("Success Stack init  & TIZEN public doesn't check Firmware Version!!");
-#else
 	DEBUG_MSG("Success Stack init  & Check the Firmware Version!!");
 
 	if(net_nfc_nxp_controller_check_firmware_version(result) == TRUE)
@@ -1731,7 +1730,7 @@ static bool net_nfc_nxp_controller_init(net_nfc_error_e *result)
 			}
 		}
 	}
-#endif
+
 	g_stack_init_successful = true;
 
 	DEBUG_MSG("Stack init finished!!");
@@ -1876,6 +1875,12 @@ static bool net_nfc_nxp_controller_check_firmware_version(net_nfc_error_e *resul
 		return false;
 	}
 
+	if(nxp_nfc_full_version == NULL)
+	{
+		DEBUG_MSG("=== There are no firmware file");
+		return false;
+	}
+
 	*result = NET_NFC_OK;
 
 	DEBUG_MSG("get stack capability");
@@ -1905,11 +1910,6 @@ static bool net_nfc_nxp_controller_check_firmware_version(net_nfc_error_e *resul
 
 static bool net_nfc_nxp_controller_update_firmware(net_nfc_error_e *result)
 {
-#ifdef TIZEN_PUBLIC
-	*result = NET_NFC_OK;
-
-	DEBUG_MSG("TIZEN public doesn't support firmware update\n");
-#else
 	phNfc_sData_t InParam;
 	phNfc_sData_t OutParam;
 	int user_context = 0xff;
@@ -1972,7 +1972,7 @@ static bool net_nfc_nxp_controller_update_firmware(net_nfc_error_e *result)
 
 	free(InParam.buffer);
 	free(OutParam.buffer);
-#endif
+
 	return true;
 }
 
@@ -2244,6 +2244,8 @@ static bool net_nfc_nxp_controller_get_secure_element_list(net_nfc_secure_elemen
 		else
 		{
 			NET_NFC_OEM_CONTROLLER_UNLOCK;
+
+			*result = NET_NFC_NO_DATA_FOUND;
 
 			DEBUG_MSG("there is no secure item error = [0x%x]", status);
 
