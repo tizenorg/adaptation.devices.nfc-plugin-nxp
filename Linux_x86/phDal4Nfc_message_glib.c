@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-static int g_msg_q_id = -1;
+static int g_msg_q_id;
 pthread_mutex_t * _nfc_get_fri_lock ();
 
 typedef struct phOsalNfc_Message_Wrapper{
@@ -79,7 +79,7 @@ gboolean DeferredCallback(gpointer data)
 
 int InitMessageQueue()
 {
-	if(g_msg_q_id < 0)
+	if(g_msg_q_id == 0)
 	{
 		g_msg_q_id = phDal4Nfc_msgget(IPC_PRIVATE, 0666 | IPC_CREAT);
 	}

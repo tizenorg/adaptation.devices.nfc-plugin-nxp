@@ -1387,7 +1387,7 @@ static bool _net_nfc_dal_config()
 
 	NET_NFC_OEM_CONTROLLER_LOCK;
 
-	if ((nClientID = InitMessageQueue()) < 0)
+	if ((nClientID = InitMessageQueue()) == 0)
 	{
 		NET_NFC_OEM_CONTROLLER_UNLOCK;
 		DEBUG_MSG("failed to init message Q");
