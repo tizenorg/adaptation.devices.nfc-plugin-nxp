@@ -1,9 +1,3 @@
-#sbs-git:slp/pkgs/n/nfc-plugin-nxp nfc-plugin-nxp 0.0.1 373e1f7d458128eca88b9f4ea73d798394449e18
-%define _optdir	/opt
-%define _appdir	%{_optdir}/apps
-%define _ugdir	%{_optdir}/ug
-
-
 Name:       nfc-plugin-nxp
 Summary:    NFC Plugin for NXP Solution
 Version:    0.0.7
@@ -32,9 +26,12 @@ make %{?jobs:-j%jobs}
 
 %install
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/license
+cp -af LICENSE.APLv2 %{buildroot}/usr/share/license/%{name}
+
 %make_install
 
-%post 
+%post
 # file owner
 if [ "${USER}" = "root" ]
 then
@@ -46,5 +43,6 @@ fi
 
 %files
 %manifest nfc-plugin-nxp.manifest
-%defattr(-,root,root,-) 
+%defattr(-,root,root,-)
 /usr/lib/libnfc-plugin.so
+/usr/share/license/%{name}
