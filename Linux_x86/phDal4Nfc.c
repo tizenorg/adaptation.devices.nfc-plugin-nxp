@@ -774,7 +774,8 @@ int phDal4Nfc_ReaderThread(void * pArg)
 		/* Issue read operation.*/
 		gReadWriteContext.nNbOfBytesRead = 0;
 		DAL_DEBUG("\n*New *** *****Request Length = %d",gReadWriteContext.nNbOfBytesToRead);
-		memsetRet = memset(gReadWriteContext.pReadBuffer, 0, gReadWriteContext.nNbOfBytesToRead);
+		if (gReadWriteContext.pReadBuffer)
+			memsetRet = memset(gReadWriteContext.pReadBuffer, 0, gReadWriteContext.nNbOfBytesToRead);
 
 		if (gReadWriteContext.nReadThreadAlive == 0)
 		{
@@ -790,10 +791,10 @@ int phDal4Nfc_ReaderThread(void * pArg)
 
 		for (i = 0; i < gReadWriteContext.nNbOfBytesRead; i++)
 		{
-			if(gReadWriteContext.pReadBuffer != NULL)
+			if(gReadWriteContext.pReadBuffer)
 			{
 			    DAL_DEBUG("0x%x ", gReadWriteContext.pReadBuffer[i]);
-	        	}
+			}
 
 		}
 

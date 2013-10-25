@@ -97,14 +97,14 @@
                 IDLengthByte = 0,
                 NoOfRecordsReturnFlag = 0,
                 IDLength = 0;
-    uint32_t    Count = 0,              
+    uint32_t    Count = 0,
                 PayloadLength = 0,
                 BytesTraversed = 0;
-    
+
     /*  Validate the input parameters */
     if (Buffer == NULL || BufferLength == 0 || NumberOfRawRecords == NULL)
     {
-        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                             NFCSTATUS_INVALID_PARAMETER);
         return Status;
     }
@@ -112,11 +112,11 @@
     if((*NumberOfRawRecords) > 0)
     {
         /*  The number of caller-provided array positions for the array IsChunked
-            has to be the same as NumberOfRawRecords. Hence, 
+            has to be the same as NumberOfRawRecords. Hence,
             if NumberOfRawRecords > 0, the array IsChunked cannot be null */
         if(IsChunked == NULL)
         {
-            Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+            Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                                 NFCSTATUS_INVALID_PARAMETER);
             return Status;
         }
@@ -132,24 +132,24 @@
     }
 
     /* Check for the MB bit*/
-    if ((*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_MB) != 
+    if ((*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_MB) !=
             PH_FRINFC_NDEFRECORD_FLAGS_MB )
     {
         /* MB  Error */
-        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                             NFCSTATUS_INVALID_FORMAT);
-        
+
         /*  Number of valid records found in the message is 0 */
         *NumberOfRawRecords = 0;
         return Status;
     }
 
     /* Check for Tnf bits 0x07 is reserved for future use */
-    if ((*Buffer & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK) == 
+    if ((*Buffer & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK) ==
         PH_FRINFC_NDEFRECORD_TNF_RESERVED)
     {
         /* TNF 07  Error */
-        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                             NFCSTATUS_INVALID_FORMAT);
         /*  Number of valid records found in the message is 0 */
         *NumberOfRawRecords = 0;
@@ -160,7 +160,7 @@
     if ((*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_MB) == PH_FRINFC_NDEFRECORD_FLAGS_MB &&
         (*Buffer & PH_FRINFC_NDEFRECORD_TNF_UNCHANGED) == PH_FRINFC_NDEFRECORD_TNF_UNCHANGED)
     {
-        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                             NFCSTATUS_INVALID_FORMAT);
         /*  Number of valid records found in the message is 0 */
         *NumberOfRawRecords = 0;
@@ -173,58 +173,53 @@
          (*Buffer & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK) != PH_FRINFC_NDEFRECORD_TNF_EMPTY &&
          *(Buffer + 1) == 0)
     {
-        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                             NFCSTATUS_INVALID_FORMAT);
         /*  Number of valid records found in the message is 0  */
         *NumberOfRawRecords = 0;
         return Status;
     }
-    
+
     /* Check till Buffer Length exceeds */
     while ( BytesTraversed < BufferLength )
     {
-    	if (Buffer == NULL) 
-    	{
-			break;
-    	}
-		
         /* For Each Record Check whether it contains the ME bit set and CF bit Set
             if YES return ERROR*/
-        if ((*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_CF) == 
+        if ((*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_CF) ==
                     PH_FRINFC_NDEFRECORD_FLAGS_CF  &&
-            (*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_ME) == 
+            (*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_ME) ==
              PH_FRINFC_NDEFRECORD_FLAGS_ME)
         {
             /* CF and ME Error */
-            Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+            Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                     NFCSTATUS_INVALID_FORMAT);
             break;
         }
-        
+
         if (NoOfRecordsReturnFlag == 0)
         {
-            /*  Harsha: Fix for 0000241: [gk], NDEF Tools: GetRecords() overshoots 
+            /*  Harsha: Fix for 0000241: [gk], NDEF Tools: GetRecords() overshoots
                 a given array boundary if the number of records != 0. */
-            /*  Actual Number of Records should not exceed Number of records 
+            /*  Actual Number of Records should not exceed Number of records
                 required by caller*/
             if(Count >= *NumberOfRawRecords)
             {
                 break;
             }
             /* To fix the mantis entry 0388 */
-            if((Buffer != NULL)&&(RawRecords!=NULL))/*QMOR FIX*/
-            { 
+            if(RawRecords!=NULL)/*QMOR FIX*/
+            {
                 RawRecords[Count] = Buffer;
             }
             else
             {
-                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                                     NFCSTATUS_INVALID_PARAMETER);
                 break;
             }
         }
-        
-        /* To Calculate the IDLength and PayloadLength for 
+
+        /* To Calculate the IDLength and PayloadLength for
             short or normal record */
         Status = phFriNfc_NdefRecord_RecordIDCheck (    Buffer,
                                                         &TypeLength,
@@ -243,7 +238,7 @@
         {
             /*  If NoOfRecordsReturnFlag = 0, that means we have enough space  */
             /*  in the array IsChunked, to write  */
-            if ((*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_CF) == 
+            if ((*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_CF) ==
                 PH_FRINFC_NDEFRECORD_FLAGS_CF)
             {
                 IsChunked [Count] = PHFRINFCNDEFRECORD_CHUNKBIT_SET;
@@ -257,19 +252,19 @@
         /* Check the record is not the first record */
         if (Count > 0)
         {
-            /* Not a first record, if chunk record is present and IL bit is set 
+            /* Not a first record, if chunk record is present and IL bit is set
                 also if the MB bit is set */
-            if(((*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_CF) == PH_FRINFC_NDEFRECORD_FLAGS_CF && 
-                (*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_IL) == PH_FRINFC_NDEFRECORD_FLAGS_IL && 
-                (*Buffer & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK) == PH_FRINFC_NDEFRECORD_TNF_UNCHANGED) || 
+            if(((*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_CF) == PH_FRINFC_NDEFRECORD_FLAGS_CF &&
+                (*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_IL) == PH_FRINFC_NDEFRECORD_FLAGS_IL &&
+                (*Buffer & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK) == PH_FRINFC_NDEFRECORD_TNF_UNCHANGED) ||
                 (*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_MB) == PH_FRINFC_NDEFRECORD_FLAGS_MB)
             {
                 /* IL or MB Error */
-                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                                     NFCSTATUS_INVALID_FORMAT);
                 break;
             }
-            
+
             /* Check for the Chunk Flag */
             if (NoOfRecordsReturnFlag == 0)
             {
@@ -277,26 +272,26 @@
                     contains valid values. So, cannot check the value
                     of IsChunked if NoOfRecordsReturnFlag = 1.  */
 
-                /*  Check whether the previous record has the chunk flag and 
-                    TNF of present record is not 0x06 */ 
-                if (IsChunked [Count - 1] == PHFRINFCNDEFRECORD_CHUNKBIT_SET && 
-                    (*Buffer & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK) != 
+                /*  Check whether the previous record has the chunk flag and
+                    TNF of present record is not 0x06 */
+                if (IsChunked [Count - 1] == PHFRINFCNDEFRECORD_CHUNKBIT_SET &&
+                    (*Buffer & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK) !=
                     PH_FRINFC_NDEFRECORD_TNF_UNCHANGED)
                 {
                     /* CF or TNF  Error */
-                    Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+                    Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                                         NFCSTATUS_INVALID_FORMAT);
                     break;
                 }
-                
-                /*  Check whether the previous record doesnot have the chunk flag and 
-                    TNF of present record is 0x06 */ 
-                if (IsChunked [Count - 1] == PHFRINFCNDEFRECORD_CHUNKBIT_SET_ZERO && 
-                    (*Buffer & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK) == 
+
+                /*  Check whether the previous record doesnot have the chunk flag and
+                    TNF of present record is 0x06 */
+                if (IsChunked [Count - 1] == PHFRINFCNDEFRECORD_CHUNKBIT_SET_ZERO &&
+                    (*Buffer & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK) ==
                     PH_FRINFC_NDEFRECORD_TNF_UNCHANGED)
                 {
                     /* CF or TNF  Error */
-                    Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+                    Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                                         NFCSTATUS_INVALID_FORMAT);
                     break;
                 }
@@ -309,7 +304,7 @@
                     if (TypeLength != 0 || IDLength != 0)
                     {
                         /* last chunk record Error */
-                        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+                        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                                             NFCSTATUS_INVALID_FORMAT);
                         break;
                     }
@@ -318,15 +313,15 @@
         }   /*  if (Count > 0)  */
 
         /*  Calculate the bytes already traversed. */
-        BytesTraversed = (BytesTraversed + PayloadLengthByte + IDLengthByte + TypeLength 
-                         + IDLength + TypeLengthByte + PayloadLength 
+        BytesTraversed = (BytesTraversed + PayloadLengthByte + IDLengthByte + TypeLength
+                         + IDLength + TypeLengthByte + PayloadLength
                          + PH_FRINFC_NDEFRECORD_BUF_INC1);
 
         if(BytesTraversed == BufferLength)
         {
             /*  We have reached the last record, and everything is fine.  */
             /*  Check for the ME Byte */
-            if ((*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_ME) == 
+            if ((*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_ME) ==
                 PH_FRINFC_NDEFRECORD_FLAGS_ME)
             {
                 Count++;
@@ -336,26 +331,26 @@
             {
                 /* Each message must have ME flag in the last record, Since
                 ME is not set raise an error */
-                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                 NFCSTATUS_INVALID_FORMAT);
                 break;
             }
         }
-       else 
+       else
         {
             /* Buffer Overshoot: Inconsistency in the message length
               and actual value of the bytes in the message detected.
               Report error.*/
             if(BytesTraversed > BufferLength)
             {
-                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                                 NFCSTATUS_INVALID_FORMAT);
                 break;
             }
         }
         /*  For Each Record Check whether it contains the ME bit set
             if YES return*/
-        if ((*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_ME) == 
+        if ((*Buffer & PH_FRINFC_NDEFRECORD_FLAGS_ME) ==
             PH_FRINFC_NDEFRECORD_FLAGS_ME)
         {
             Count++;
@@ -363,10 +358,10 @@
         }
 
         /* +1 is for first byte */
-        Buffer = (Buffer + PayloadLengthByte + IDLengthByte + TypeLength 
-                 + TypeLengthByte + IDLength + PayloadLength 
+        Buffer = (Buffer + PayloadLengthByte + IDLengthByte + TypeLength
+                 + TypeLengthByte + IDLength + PayloadLength
                  + PH_FRINFC_NDEFRECORD_BUF_INC1);
-        
+
         /*  Increment the number of valid records found in the message  */
         Count++;
     }
@@ -392,16 +387,16 @@ uint32_t phFriNfc_NdefRecord_GetLength(phFriNfc_NdefRecord_t *Record)
 
     FlagCheck=phFriNfc_NdefRecord_NdefFlag(Record->Tnf,PH_FRINFC_NDEFRECORD_TNFBYTE_MASK);
     /* Type length is present only for following TNF
-                    PH_FRINFC_NDEFRECORD_TNF_NFCWELLKNOWN 
+                    PH_FRINFC_NDEFRECORD_TNF_NFCWELLKNOWN
                     PH_FRINFC_NDEFRECORD_TNF_MEDIATYPE
                     PH_FRINFC_NDEFRECORD_TNF_ABSURI
                     PH_FRINFC_NDEFRECORD_TNF_NFCEXT
     */
-    
+
     /* ++ is for the Type Length Byte */
     RecordLength++;
     if( FlagCheck != PH_FRINFC_NDEFRECORD_TNF_EMPTY &&
-        FlagCheck != PH_FRINFC_NDEFRECORD_TNF_UNKNOWN && 
+        FlagCheck != PH_FRINFC_NDEFRECORD_TNF_UNKNOWN &&
         FlagCheck != PH_FRINFC_NDEFRECORD_TNF_UNCHANGED )
     {
         RecordLength += Record->TypeLength;
@@ -424,9 +419,9 @@ uint32_t phFriNfc_NdefRecord_GetLength(phFriNfc_NdefRecord_t *Record)
     FlagCheck=phFriNfc_NdefRecord_NdefFlag(Record->Tnf,PH_FRINFC_NDEFRECORD_TNFBYTE_MASK);
     if(FlagCheck != PH_FRINFC_NDEFRECORD_TNF_EMPTY)
     {
-        RecordLength += Record->PayloadLength;    
+        RecordLength += Record->PayloadLength;
     }
-    
+
     /* ID and IDlength are present only if IL flag is set*/
     FlagCheck=phFriNfc_NdefRecord_NdefFlag(Record->Flags,PH_FRINFC_NDEFRECORD_FLAGS_IL);
     if(FlagCheck!=0)
@@ -462,7 +457,7 @@ uint32_t phFriNfc_NdefRecord_GetLength(phFriNfc_NdefRecord_t *Record)
  */
 NFCSTATUS phFriNfc_NdefRecord_Parse(phFriNfc_NdefRecord_t *Record,
                                     uint8_t               *RawRecord)
-{    
+{
     NFCSTATUS       Status = NFCSTATUS_SUCCESS;
     uint8_t         PayloadLengthByte = 0,
                     TypeLengthByte = 0,
@@ -471,21 +466,21 @@ NFCSTATUS phFriNfc_NdefRecord_Parse(phFriNfc_NdefRecord_t *Record,
                     IDLength = 0,
                     Tnf     =   0;
     uint32_t        PayloadLength = 0;
-    
+
     if (Record == NULL || RawRecord == NULL)
     {
-        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                             NFCSTATUS_INVALID_PARAMETER);
     }
 
     else
     {
 
-        /* Calculate the Flag Value */  
+        /* Calculate the Flag Value */
         Record->Flags = phFriNfc_NdefRecord_RecordFlag ( RawRecord);
-    
-        /* Calculate the Type Namr format of the record */ 
-        Tnf = phFriNfc_NdefRecord_TypeNameFormat( RawRecord); 
+
+        /* Calculate the Type Namr format of the record */
+        Tnf = phFriNfc_NdefRecord_TypeNameFormat( RawRecord);
         if(Tnf != 0xFF)
         {
             Record->Tnf = Tnf;
@@ -498,13 +493,13 @@ NFCSTATUS phFriNfc_NdefRecord_Parse(phFriNfc_NdefRecord_t *Record,
                                                             &IDLengthByte,
                                                             &IDLength);
             Record->TypeLength = TypeLength;
-            Record->PayloadLength = PayloadLength;  
+            Record->PayloadLength = PayloadLength;
             Record->IdLength = IDLength;
             RawRecord = (RawRecord +  PayloadLengthByte + IDLengthByte + TypeLengthByte + PH_FRINFC_NDEFRECORD_BUF_INC1);
             Record->Type = RawRecord;
-    
+
             RawRecord = (RawRecord + Record->TypeLength);
-    
+
             if (Record->IdLength != 0)
             {
                 Record->Id = RawRecord;
@@ -515,9 +510,9 @@ NFCSTATUS phFriNfc_NdefRecord_Parse(phFriNfc_NdefRecord_t *Record,
         }
         else
         {
-            Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+            Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                                 NFCSTATUS_INVALID_PARAMETER);
-        }       
+        }
     }
     return Status;
 }
@@ -553,7 +548,7 @@ NFCSTATUS phFriNfc_NdefRecord_Parse(phFriNfc_NdefRecord_t *Record,
     uint8_t     FlagCheck,
                 TypeCheck=0,
                 *temp,
-                i;  
+                i;
     uint32_t    i_data=0;
 
     if(Record==NULL ||Buffer==NULL||BytesWritten==NULL||MaxBufferSize == 0)
@@ -578,7 +573,7 @@ NFCSTATUS phFriNfc_NdefRecord_Parse(phFriNfc_NdefRecord_t *Record,
     /*increment the buffer*/
     *Buffer = ( (Record->Flags & PH_FRINFC_NDEFRECORD_FLAG_MASK) | (Record->Tnf & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK));
     Buffer++;
-    
+
     /* check the TypeNameFlag for PH_FRINFC_NDEFRECORD_TNF_EMPTY */
     FlagCheck=phFriNfc_NdefRecord_NdefFlag(Record->Tnf,PH_FRINFC_NDEFRECORD_TNFBYTE_MASK);
     if(FlagCheck == PH_FRINFC_NDEFRECORD_TNF_EMPTY)
@@ -591,7 +586,7 @@ NFCSTATUS phFriNfc_NdefRecord_Parse(phFriNfc_NdefRecord_t *Record,
         }
         return (PHNFCSTVAL(CID_NFC_NONE, NFCSTATUS_SUCCESS));
      }
-    
+
     /* check the TypeNameFlag for PH_FRINFC_NDEFRECORD_TNF_RESERVED */
     /* TNF should not be reserved one*/
     FlagCheck=phFriNfc_NdefRecord_NdefFlag(Record->Tnf,PH_FRINFC_NDEFRECORD_TNFBYTE_MASK);
@@ -599,14 +594,14 @@ NFCSTATUS phFriNfc_NdefRecord_Parse(phFriNfc_NdefRecord_t *Record,
     {
         return (PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, NFCSTATUS_INVALID_PARAMETER));
     }
-    
+
     /* check for TNF Unknown or Unchanged */
     FlagCheck=phFriNfc_NdefRecord_NdefFlag(Record->Tnf,PH_FRINFC_NDEFRECORD_TNFBYTE_MASK);
     if(FlagCheck == PH_FRINFC_NDEFRECORD_TNF_UNKNOWN || \
         FlagCheck == PH_FRINFC_NDEFRECORD_TNF_UNCHANGED)
     {
         *Buffer = PH_FRINFC_NDEFRECORD_BUF_TNF_VALUE;
-        Buffer++;                
+        Buffer++;
     }
     else
     {
@@ -614,7 +609,7 @@ NFCSTATUS phFriNfc_NdefRecord_Parse(phFriNfc_NdefRecord_t *Record,
         Buffer++;
         TypeCheck=1;
     }
-    
+
     /* check for the short record bit if it is then payloadlength is only one byte */
     FlagCheck=phFriNfc_NdefRecord_NdefFlag(Record->Flags,PH_FRINFC_NDEFRECORD_FLAGS_SR);
     if(FlagCheck!=0)
@@ -634,7 +629,7 @@ NFCSTATUS phFriNfc_NdefRecord_Parse(phFriNfc_NdefRecord_t *Record,
         *Buffer = (uint8_t)((Record->PayloadLength & 0x000000ff));
         Buffer++;
     }
-    
+
     /*check for IL bit set(Flag), if so then IDlength is present*/
     FlagCheck=phFriNfc_NdefRecord_NdefFlag(Record->Flags,PH_FRINFC_NDEFRECORD_FLAGS_IL);
     if(FlagCheck!=0)
@@ -642,7 +637,7 @@ NFCSTATUS phFriNfc_NdefRecord_Parse(phFriNfc_NdefRecord_t *Record,
         *Buffer=Record->IdLength;
         Buffer++;
     }
-    
+
     /*check for TNF and fill the Type*/
     temp=Record->Type;
     if(TypeCheck!=0)
@@ -667,7 +662,7 @@ NFCSTATUS phFriNfc_NdefRecord_Parse(phFriNfc_NdefRecord_t *Record,
             temp++;
         }
     }
-    
+
     temp=Record->PayloadData;
     /*check for SR bit and then correspondingly use the payload length*/
     FlagCheck=phFriNfc_NdefRecord_NdefFlag(Record->Flags,PH_FRINFC_NDEFRECORD_FLAGS_SR);
@@ -677,7 +672,7 @@ NFCSTATUS phFriNfc_NdefRecord_Parse(phFriNfc_NdefRecord_t *Record,
         Buffer++;
         temp++;
     }
-    
+
     return (PHNFCSTVAL(CID_NFC_NONE, NFCSTATUS_SUCCESS));
 }
 
@@ -712,26 +707,26 @@ static uint8_t phFriNfc_NdefRecord_RecordFlag ( uint8_t    *Record)
 /* Calculate the Type Name Format for the record */
 static uint8_t phFriNfc_NdefRecord_TypeNameFormat ( uint8_t    *Record)
 {
-    uint8_t     tnf = 0;
+    uint8_t     tnf = 0xFF;
 
     switch (*Record & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK)
     {
     case PH_FRINFC_NDEFRECORD_TNF_EMPTY:
         tnf = PH_FRINFC_NDEFRECORD_TNF_EMPTY;
         break;
-        
+
     case PH_FRINFC_NDEFRECORD_TNF_NFCWELLKNOWN:
         tnf = PH_FRINFC_NDEFRECORD_TNF_NFCWELLKNOWN;
         break;
-    
+
     case PH_FRINFC_NDEFRECORD_TNF_MEDIATYPE:
         tnf = PH_FRINFC_NDEFRECORD_TNF_MEDIATYPE;
         break;
-    
+
     case PH_FRINFC_NDEFRECORD_TNF_ABSURI:
         tnf = PH_FRINFC_NDEFRECORD_TNF_ABSURI;
         break;
-    
+
     case PH_FRINFC_NDEFRECORD_TNF_NFCEXT:
         tnf = PH_FRINFC_NDEFRECORD_TNF_NFCEXT;
         break;
@@ -747,9 +742,6 @@ static uint8_t phFriNfc_NdefRecord_TypeNameFormat ( uint8_t    *Record)
     case PH_FRINFC_NDEFRECORD_TNF_RESERVED:
         tnf = PH_FRINFC_NDEFRECORD_TNF_RESERVED;
         break;
-    default :
-        tnf = 0xFF;
-        break;
     }
 
     return tnf;
@@ -757,7 +749,7 @@ static uint8_t phFriNfc_NdefRecord_TypeNameFormat ( uint8_t    *Record)
 
 
 static NFCSTATUS phFriNfc_NdefRecord_RecordIDCheck ( uint8_t       *Record,
-                                              uint8_t       *TypeLength,    
+                                              uint8_t       *TypeLength,
                                               uint8_t       *TypeLengthByte,
                                               uint8_t       *PayloadLengthByte,
                                               uint32_t      *PayloadLength,
@@ -765,44 +757,44 @@ static NFCSTATUS phFriNfc_NdefRecord_RecordIDCheck ( uint8_t       *Record,
                                               uint8_t       *IDLength)
 {
     NFCSTATUS   Status = NFCSTATUS_SUCCESS;
-    
+
     /* Check for Tnf bits 0x07 is reserved for future use */
-    if ((*Record & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK) == 
+    if ((*Record & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK) ==
         PH_FRINFC_NDEFRECORD_TNF_RESERVED)
     {
         /* TNF 07  Error */
-        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+        Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                             NFCSTATUS_INVALID_FORMAT);
         return Status;
     }
 
     /* Check for Type Name Format  depending on the TNF,  Type Length value is set*/
-    if ((*Record & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK)== 
+    if ((*Record & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK)==
         PH_FRINFC_NDEFRECORD_TNF_EMPTY)
     {
-        *TypeLength = *(Record + PH_FRINFC_NDEFRECORD_BUF_INC1);    
-        
+        *TypeLength = *(Record + PH_FRINFC_NDEFRECORD_BUF_INC1);
+
         if (*(Record + PH_FRINFC_NDEFRECORD_BUF_INC1) != 0)
         {
             /* Type Length  Error */
-            Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+            Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                                 NFCSTATUS_INVALID_FORMAT);
             return Status;
         }
-        
+
         *TypeLengthByte = 1;
-        
-        /* Check for Short Record */ 
-        if ((*Record & PH_FRINFC_NDEFRECORD_FLAGS_SR) == PH_FRINFC_NDEFRECORD_FLAGS_SR) 
+
+        /* Check for Short Record */
+        if ((*Record & PH_FRINFC_NDEFRECORD_FLAGS_SR) == PH_FRINFC_NDEFRECORD_FLAGS_SR)
         {
-            /* For Short Record, Payload Length Byte is 1 */ 
+            /* For Short Record, Payload Length Byte is 1 */
             *PayloadLengthByte = 1;
             /*  1 for Header byte */
             *PayloadLength = *(Record + *TypeLengthByte + 1);
             if (*PayloadLength != 0)
             {
                 /* PayloadLength  Error */
-                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                                     NFCSTATUS_INVALID_FORMAT);
                 return Status;
             }
@@ -811,14 +803,14 @@ static NFCSTATUS phFriNfc_NdefRecord_RecordIDCheck ( uint8_t       *Record,
         {
             /* For Normal Record, Payload Length Byte is 4 */
             *PayloadLengthByte = PHFRINFCNDEFRECORD_NORMAL_RECORD_BYTE;
-            *PayloadLength =    ((((uint32_t)(*(Record + PH_FRINFC_NDEFRECORD_BUF_INC2))) << PHNFCSTSHL24) + 
-                                (((uint32_t)(*(Record + PH_FRINFC_NDEFRECORD_BUF_INC3))) << PHNFCSTSHL16) + 
-                                (((uint32_t)(*(Record + PH_FRINFC_NDEFRECORD_BUF_INC4))) << PHNFCSTSHL8)  + 
+            *PayloadLength =    ((((uint32_t)(*(Record + PH_FRINFC_NDEFRECORD_BUF_INC2))) << PHNFCSTSHL24) +
+                                (((uint32_t)(*(Record + PH_FRINFC_NDEFRECORD_BUF_INC3))) << PHNFCSTSHL16) +
+                                (((uint32_t)(*(Record + PH_FRINFC_NDEFRECORD_BUF_INC4))) << PHNFCSTSHL8)  +
                                              *(Record + PH_FRINFC_NDEFRECORD_BUF_INC5));
             if (*PayloadLength != 0)
             {
                 /* PayloadLength  Error */
-                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                                     NFCSTATUS_INVALID_FORMAT);
                 return Status;
             }
@@ -829,12 +821,12 @@ static NFCSTATUS phFriNfc_NdefRecord_RecordIDCheck ( uint8_t       *Record,
         {
             /* Length Byte exists and it is 1 byte */
             *IDLengthByte = 1;
-            /*  1 for Header byte */        
+            /*  1 for Header byte */
             *IDLength = (uint8_t)*(Record + *PayloadLengthByte + *TypeLengthByte + PH_FRINFC_NDEFRECORD_BUF_INC1);
             if (*IDLength != 0)
             {
                 /* IDLength  Error */
-                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                                     NFCSTATUS_INVALID_FORMAT);
                 return Status;
             }
@@ -847,18 +839,18 @@ static NFCSTATUS phFriNfc_NdefRecord_RecordIDCheck ( uint8_t       *Record,
     }
     else
     {
-        if ((*Record & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK)== PH_FRINFC_NDEFRECORD_TNF_UNKNOWN 
-                || (*Record & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK) == 
+        if ((*Record & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK)== PH_FRINFC_NDEFRECORD_TNF_UNKNOWN
+                || (*Record & PH_FRINFC_NDEFRECORD_TNFBYTE_MASK) ==
                     PH_FRINFC_NDEFRECORD_TNF_UNCHANGED)
         {
             if (*(Record + PH_FRINFC_NDEFRECORD_BUF_INC1) != 0)
             {
                 /* Type Length  Error */
-                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD, 
+                Status = PHNFCSTVAL(CID_FRI_NFC_NDEF_RECORD,
                             NFCSTATUS_INVALID_FORMAT);
                 return Status;
             }
-            *TypeLength = 0;    
+            *TypeLength = 0;
             *TypeLengthByte = 1;
         }
         else
@@ -867,12 +859,12 @@ static NFCSTATUS phFriNfc_NdefRecord_RecordIDCheck ( uint8_t       *Record,
             *TypeLength = *(Record + PH_FRINFC_NDEFRECORD_BUF_INC1);
             *TypeLengthByte = 1;
         }
-        
-        /* Check for Short Record */ 
-        if ((*Record & PH_FRINFC_NDEFRECORD_FLAGS_SR) == 
-                PH_FRINFC_NDEFRECORD_FLAGS_SR) 
+
+        /* Check for Short Record */
+        if ((*Record & PH_FRINFC_NDEFRECORD_FLAGS_SR) ==
+                PH_FRINFC_NDEFRECORD_FLAGS_SR)
         {
-            /* For Short Record, Payload Length Byte is 1 */ 
+            /* For Short Record, Payload Length Byte is 1 */
             *PayloadLengthByte = 1;
             /*  1 for Header byte */
             *PayloadLength = *(Record + *TypeLengthByte + PH_FRINFC_NDEFRECORD_BUF_INC1);
@@ -881,18 +873,18 @@ static NFCSTATUS phFriNfc_NdefRecord_RecordIDCheck ( uint8_t       *Record,
         {
             /* For Normal Record, Payload Length Byte is 4 */
             *PayloadLengthByte = PHFRINFCNDEFRECORD_NORMAL_RECORD_BYTE;
-            *PayloadLength =    ((((uint32_t)(*(Record + PH_FRINFC_NDEFRECORD_BUF_INC2))) << PHNFCSTSHL24) + 
-                                (((uint32_t)(*(Record + PH_FRINFC_NDEFRECORD_BUF_INC3))) << PHNFCSTSHL16) + 
-                                (((uint32_t)(*(Record + PH_FRINFC_NDEFRECORD_BUF_INC4))) << PHNFCSTSHL8)  + 
+            *PayloadLength =    ((((uint32_t)(*(Record + PH_FRINFC_NDEFRECORD_BUF_INC2))) << PHNFCSTSHL24) +
+                                (((uint32_t)(*(Record + PH_FRINFC_NDEFRECORD_BUF_INC3))) << PHNFCSTSHL16) +
+                                (((uint32_t)(*(Record + PH_FRINFC_NDEFRECORD_BUF_INC4))) << PHNFCSTSHL8)  +
                                              *(Record + PH_FRINFC_NDEFRECORD_BUF_INC5));
         }
-        
+
         /* Check for ID Length existence */
-        if ((*Record & PH_FRINFC_NDEFRECORD_FLAGS_IL) == 
+        if ((*Record & PH_FRINFC_NDEFRECORD_FLAGS_IL) ==
                 PH_FRINFC_NDEFRECORD_FLAGS_IL)
         {
             *IDLengthByte = 1;
-            /*  1 for Header byte */        
+            /*  1 for Header byte */
             *IDLength = (uint8_t)*(Record + *PayloadLengthByte + *TypeLengthByte + PH_FRINFC_NDEFRECORD_BUF_INC1);
         }
         else

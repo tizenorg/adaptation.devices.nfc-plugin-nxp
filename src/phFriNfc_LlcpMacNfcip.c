@@ -84,6 +84,7 @@ static NFCSTATUS phFriNfc_LlcpMac_Nfcip_Chk(phFriNfc_LlcpMac_t                  
                                             phFriNfc_LlcpMac_Chk_CB_t            ChkLlcpMac_Cb,
                                             void                                 *pContext)
 {
+   int ret;
    NFCSTATUS status = NFCSTATUS_SUCCESS;
    uint8_t Llcp_Magic_Number[] = {0x46,0x66,0x6D};
 
@@ -93,8 +94,8 @@ static NFCSTATUS phFriNfc_LlcpMac_Nfcip_Chk(phFriNfc_LlcpMac_t                  
    }
    else
    {
-      status = (NFCSTATUS)memcmp(Llcp_Magic_Number,LlcpMac->psRemoteDevInfo->RemoteDevInfo.NfcIP_Info.ATRInfo,3);
-      if(!status)
+      ret = memcmp(Llcp_Magic_Number,LlcpMac->psRemoteDevInfo->RemoteDevInfo.NfcIP_Info.ATRInfo,3);
+      if(!ret)
       {
          LlcpMac->sConfigParam.buffer = &LlcpMac->psRemoteDevInfo->RemoteDevInfo.NfcIP_Info.ATRInfo[3] ;
          LlcpMac->sConfigParam.length = (LlcpMac->psRemoteDevInfo->RemoteDevInfo.NfcIP_Info.ATRInfo_Length - 3);
@@ -276,7 +277,7 @@ static NFCSTATUS phFriNfc_LlcpMac_Nfcip_Send(phFriNfc_LlcpMac_t               *L
                                              void                             *pContext)
 {
    NFCSTATUS status = NFCSTATUS_SUCCESS;
-   
+
    if(NULL == LlcpMac || NULL == psData || NULL == LlcpMacSend_Cb || NULL == pContext)
    {
       status = PHNFCSTVAL(CID_FRI_NFC_LLCP_MAC, NFCSTATUS_INVALID_PARAMETER);

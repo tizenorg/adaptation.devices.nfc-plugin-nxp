@@ -1,6 +1,6 @@
 Name:       nfc-plugin-nxp
 Summary:    NFC Plugin for NXP Solution
-Version:    0.0.7
+Version:    0.0.8
 Release:    0
 Group:      TO_BE/FILLED_IN
 License:    TO BE FILLED IN
