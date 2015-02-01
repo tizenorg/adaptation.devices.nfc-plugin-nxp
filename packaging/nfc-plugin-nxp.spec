@@ -1,28 +1,22 @@
 Name:       nfc-plugin-nxp
-Summary:    NFC Plugin for NXP Solution
-Version:    0.0.8
+Summary:    nfc plugin for nxp chip
+Version:    0.0.13
 Release:    0
-Group:      TO_BE/FILLED_IN
+Group:      Network & Connectivity
 License:    Apache-2.0
 Source0:    %{name}-%{version}.tar.gz
-BuildRequires: cmake
-BuildRequires: pkgconfig(glib-2.0)
-BuildRequires: pkgconfig(vconf)
-BuildRequires: pkgconfig(dlog)
-BuildRequires: pkgconfig(nfc-common-lib)
+Source1: 	%{name}.manifest
+BuildRequires:	cmake
 
 %description
-Description: NFC Plugin for NXP Solution
-
+nfc plugin for nxp chip
 
 %prep
 %setup -q
+cp %{SOURCE1} .
 
 %build
 cmake . -DCMAKE_INSTALL_PREFIX=%{_prefix}
-
-make %{?jobs:-j%jobs}
-
 
 %install
 rm -rf %{buildroot}
@@ -32,17 +26,15 @@ cp -af LICENSE.APLv2 %{buildroot}/usr/share/license/%{name}
 %make_install
 
 %post
-# file owner
 if [ "${USER}" = "root" ]
 then
-	vconftool set -t string memory/private/nfc-plugin-nxp/eeprom "" -g 6517 -i -f
+    vconftool set -t string memory/private/nfc-plugin-nxp/eeprom "" -g 6517 -i -f
 else
-	vconftool set -t string memory/private/nfc-plugin-nxp/eeprom "" -f
+    vconftool set -t string memory/private/nfc-plugin-nxp/eeprom "" -f
 fi
-
 
 %files
 %manifest nfc-plugin-nxp.manifest
 %defattr(-,root,root,-)
-/usr/lib/libnfc-plugin.so
+/usr/lib/nfc/libnfc-plugin.so
 /usr/share/license/%{name}
