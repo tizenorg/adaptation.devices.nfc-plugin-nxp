@@ -1,60 +1,40 @@
-#sbs-git:slp/pkgs/n/nfc-plugin-nxp nfc-plugin-nxp 0.0.1 373e1f7d458128eca88b9f4ea73d798394449e18
-%define _optdir	/opt
-%define _appdir	%{_optdir}/apps
-%define _ugdir	%{_optdir}/ug
-
-
 Name:       nfc-plugin-nxp
-Summary:    NFC Plugin for NXP Solution
-Version:    0.0.3
+Summary:    nfc plugin for nxp chip
+Version:    0.0.14
 Release:    0
-Group:      TO_BE/FILLED_IN
-License:    TO BE FILLED IN
+Group:      Network & Connectivity
+License:    Apache-2.0
 Source0:    %{name}-%{version}.tar.gz
-BuildRequires: cmake
-BuildRequires: pkgconfig(aul)
-BuildRequires: pkgconfig(syspopup-caller)
-BuildRequires: pkgconfig(glib-2.0)
-BuildRequires: pkgconfig(ecore)
-BuildRequires: pkgconfig(vconf)
-BuildRequires: pkgconfig(elementary)
-BuildRequires: pkgconfig(mm-common)
-BuildRequires: pkgconfig(mm-sound)
-BuildRequires: pkgconfig(security-server)
-BuildRequires: pkgconfig(contacts-service)
-BuildRequires: pkgconfig(bluetooth-api)
-BuildRequires: pkgconfig(gconf-2.0)
-BuildRequires: pkgconfig(dlog)
-BuildRequires: pkgconfig(memo)
-BuildRequires: pkgconfig(nfc-common-lib)
+Source1: 	%{name}.manifest
+BuildRequires:	cmake
 
 %description
-Description: NFC Plugin for NXP Solution
-
+nfc plugin for nxp chip
 
 %prep
 %setup -q
+cp %{SOURCE1} .
 
 %build
 cmake . -DCMAKE_INSTALL_PREFIX=%{_prefix}
 
-make %{?jobs:-j%jobs}
-
-
 %install
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/license
+cp -af LICENSE.APLv2 %{buildroot}/usr/share/license/%{name}
+
 %make_install
 
-%post 
-# file owner
-if [ ${USER} == "root" ]
+%post
+if [ "${USER}" = "root" ]
 then
-	vconftool set -t string memory/private/nfc-plugin-nxp/eeprom "" -g 6517 -i
+    vconftool set -t string memory/private/nfc-plugin-nxp/eeprom "" -g 6517 -i -f
 else
-	vconftool set -t string memory/private/nfc-plugin-nxp/eeprom ""
+    vconftool set -t string memory/private/nfc-plugin-nxp/eeprom "" -f
 fi
 
-
 %files
-%defattr(-,root,root,-) 
-/usr/lib/libnfc-plugin.so
+%manifest nfc-plugin-nxp.manifest
+%defattr(-,root,root,-)
+/usr/lib/nfc/libnfc-plugin.so
+/usr/share/license/%{name}
