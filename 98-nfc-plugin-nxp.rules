@@ -1,0 +1,2 @@
+# NXP NFC node
+KERNEL=="pn544", SUBSYSTEM=="misc", GROUP="system", SECLABEL{smack}="*"

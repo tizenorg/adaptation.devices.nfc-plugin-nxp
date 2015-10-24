@@ -1,9 +1,9 @@
 Name:       nfc-plugin-nxp
 Summary:    nfc plugin for nxp chip
-Version:    0.0.14
+Version:    0.0.15
 Release:    0
 Group:      Network & Connectivity
-License:    Apache-2.0
+License:    Samsung
 Source0:    %{name}-%{version}.tar.gz
 Source1: 	%{name}.manifest
 BuildRequires:	cmake
@@ -21,7 +21,10 @@ cmake . -DCMAKE_INSTALL_PREFIX=%{_prefix}
 %install
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/license
-cp -af LICENSE.APLv2 %{buildroot}/usr/share/license/%{name}
+cp -af LICENSE %{buildroot}/usr/share/license/%{name}
+
+mkdir -p %{buildroot}%{_libdir}/udev/rules.d
+cp 98-nfc-plugin-nxp.rules %{buildroot}%{_libdir}/udev/rules.d/98-nfc-plugin-nxp.rules
 
 %make_install
 
@@ -38,3 +41,4 @@ fi
 %defattr(-,root,root,-)
 /usr/lib/nfc/libnfc-plugin.so
 /usr/share/license/%{name}
+%{_libdir}/udev/rules.d/98-nfc-plugin-nxp.rules
